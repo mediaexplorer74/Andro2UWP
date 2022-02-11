@@ -194,10 +194,10 @@ namespace Andro2UWP
                 MsaAuthenticationProvider msaAuthProvider = 
                 new MsaAuthenticationProvider
                 (
-                    this.GoneDriveConsumerClientId,
-                    this.GoneDriveConsumerReturnUrl,
-                    this.Gscopes,
-                    new CredentialVault(this.GoneDriveConsumerClientId)
+                    GoneDriveConsumerClientId, // this.
+                    GoneDriveConsumerReturnUrl, // this.
+                    Gscopes, // this.
+                    new CredentialVault(GoneDriveConsumerClientId) //this.
                 );
 #else
 
