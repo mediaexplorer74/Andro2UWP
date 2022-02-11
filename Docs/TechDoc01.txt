@@ -1,16 +1,26 @@
 Andro2UWP - Common info
 =========
 
+Privacy policy for 'Andro2UWP' app
 Android app
 This app takes your Android notifications, and some of them (filtered using rules you set) 
 send to your OneDrive (folder: Apps/Andro2UWP). You can view it either as simple text files 
 (from any browser, from any device) or using UWP companion app.
 It doesn't use any other data, and it doesn't send anything else anywhere else.
 
-
+Polityka prywatności aplikacji 'Andro2UWP'
+Aplikacja odczytuje powiadomienia Android, i niektóre z nich (odfiltrowane według utworzonych przez Ciebie reguł) 
+wysyła na Twój OneDrive (do katalogu Apps/Andro2UWP). Pliki które tam trafią są zwykłymi plikami tekstowymi, 
+możesz je oglądnąć przy pomocy dowolnej przeglądarki z dowolnego urządzenia, albo przy pomocy odpowiedniej aplikacji UWP.
+Aplikacja nie korzysta z żadnych innych Twoich danych, i nie wysyła nic innego nigdzie indziej.
 
 UWP app
 This app reads files from your OneDrive (folder: Apps/Andro2UWP), treating it as Android notification sent by Android companion app.
 It doesn't use any other data, and only data it send (to same OneDrive folder) are dictionary of renames of notification 
 sender names and notification filters, both created by you.
 
+Polityka prywatności aplikacji 'Andro2UWP'
+Aplikacja odczytuje pliki z Twojego OneDrive (z katalogu Apps/Andro2UWP), traktując je jako wysłane przez towarzyszącą 
+jej aplikację Android.
+Aplikacja nie korzysta z żadnych innych Twoich danych, a jedyne dane które wysyła (do tego samego folderu OneDrive) 
+to tworzone przez Ciebie słownik zmian nazw źródeł powiadomień oraz definicje filtrów powiadomień.

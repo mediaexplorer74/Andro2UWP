@@ -4,9 +4,15 @@
 
 My attempt to recover PKar70's Andro2UWP project, branch 10.2002.5
 
-Technical version (build) 1.0.7.0
+Technical version (build) 1.0.11.0
 
 Status: alpha (RnD)
+
+## Progress 
+- Merging Goolge and UWP branches' one drive mechanisms - ready
+- RU Localization - added (and symply tested, not ready yet)
+- Android version improved (Sync Engine recovered a partially, zero-size files generated, heh)
+- UWP version demaged after choosing ARM building... so strange  :(
 
 
 ## Idea (Goal)
@@ -23,7 +29,7 @@ Phases of "building the solution":
 
 [3] Tech. project +-
 
-[4] Dev >> [25%]
+[4] Dev >> [35%]
 
 [5] "Intro" -
 

@@ -1,4 +1,8 @@
-﻿#if __ANDROID__
+﻿// MainPage
+// Both for UWP and Android
+// 2022
+
+#if __ANDROID__
 using Android.App;
 #endif 
 using System;
@@ -18,25 +22,28 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-
-
+// Andro2UWP namespace
 namespace Andro2UWP
 {
-
+    // MainPage class
     public sealed partial class MainPage : Page
     {
+
+        // MainPage
         public MainPage()
         {
             this.InitializeComponent();
-        }
+
+        }//MainPage()
 
 
+        // uiPage_Loaded
         private async void uiPage_Loaded(object sender, RoutedEventArgs e)
         {
-#if DEBUG
-            p.k.SetSettingsInt("debugLogLevel", 5); // TODO na razie tak, potem trzeba wyciąć
-#endif
-            p.k.SetSettingsString("appFailData", "");   // zadnych pozostalosci po poprzednim run
+#if DEBUG 
+            p.k.SetSettingsInt("debugLogLevel", 5); // TODO: for now, yes, then you need to cut
+#endif 
+            p.k.SetSettingsString("appFailData", "");   // no leftovers from the previous run
             p.k.ProgRingInit(true, true);
 
             //p.k.GetAppVers("uiVersion");
@@ -44,10 +51,10 @@ namespace Andro2UWP
             App.gsDeviceName = p.k.GetSettingsString("deviceName");
             App.giCurrentNumber = p.k.GetSettingsInt("currentFileNum") + 1;
             
-            await App.AddLogEntry("Andro2UWP:MainPage:Loaded called, wartosci:\n deviceName = " + App.gsDeviceName + ",\n currentFileNum =" + App.giCurrentNumber.ToString(), true);
-            // sprobuj wczytac tabelke zamian - bo moze cos sie zmienilo od poprzedniego razu
+            await App.AddLogEntry("Andro2UWP:MainPage:Loaded called, values:\n deviceName = " + App.gsDeviceName + ",\n currentFileNum =" + App.giCurrentNumber.ToString(), true);
+            // on early days, when it was necessary to complete a task to ease the burden in the table... in general, this is from the previous time
 
-            // inicjalizacja OneDrive tutaj tylko wtedy, gdy nie pierwsze uruchomienie (bez logowania do OneDrive na pierwszym start app)
+            // initialize OneDrive here only when not first start (without logging into OneDrive on first start app)
             try
             {
                 if (p.k.GetSettingsBool("wasInit"))
@@ -58,116 +65,157 @@ namespace Andro2UWP
             catch (Exception ex)
             {
                 //Debug.WriteLine(" uiPage_Loaded - initODandDict - exception: " + ex.Message);
-                Console.WriteLine(" uiPage_Loaded - initODandDict - exception: " + ex.Message);
             }
 
-            // dla UWP nie robimy refresh - dlugo to trwa przeciez
-            if (p.k.GetPlatform("android"))
+            // for UWP we do not refresh - it takes a long time
+            // RnD: UWP refresh when app started (Main page loaded)
+            if (1 == 1) //(p.k.GetPlatform("android"))
             {
+
+                if (p.k.GetPlatform("uwp"))
+                {
+                    if (!await App.LoadNews(true))
+                    {
+                        return;
+                    }
+
+                    //if (!await App.initODandDict())
+                    //    return;     // first of all-reading the dictionaries anew (so as not to reset the dictionary!)
+
+                    //await App.WczytajNowe();
+                }
+
+
                 RefreshListView(false);
+
             }
 
 #if NETFX_CORE
-            // to jest w BottomBar, którego nie ma poza UWP, więc nie można się do niego odwołać :)
+            // this is in BottomBar, which is not present outside UWP, so you can not refer to it :)
             if (!p.k.IsFamilyDesktop())
-                uiAutoRefresh.IsEnabled = false;    // poza Deskop nie ma sensu, bo by OS i tak wyłączał na timeout
+            {
+                // besides the desktop does not make sense, because the OS
+                // and so turned off on timeout
+                uiAutoRefresh.IsEnabled = false;                  
+            }
             else
+            {
                 uiAutoRefresh.IsChecked = p.k.IsTriggersRegistered("Andro2UWP_Timer");
-#endif
+            }
+#endif 
 
-        }
+        }//uiPage_Loaded end
+
 
 #if __ANDROID__
+        // UslugaWlaczona / Service included
         private async System.Threading.Tasks.Task<bool> UslugaWlaczona()
         {
-            await App.AddLogEntry("Andro2UWP:MainPage:UslugaWlaczona called", true);
+            await App.AddLogEntry("Andro2UWP:MainPage:Service included called", true);
 
             var am = (Android.Views.Accessibility.AccessibilityManager)
-                Android.App.Application.Context.GetSystemService(Android.App.Application.AccessibilityService);
+                Android.App.Application.Context.GetSystemService
+                (
+                    Android.App.Application.AccessibilityService
+                );
+
             var enabledServices = 
-                am.GetEnabledAccessibilityServiceList(Android.AccessibilityServices.FeedbackFlags.Generic);
-            await App.AddLogEntry("wlaczonych jest " + enabledServices.Count, true );
+                am.GetEnabledAccessibilityServiceList
+                (
+                    Android.AccessibilityServices.FeedbackFlags.Generic
+                );
+
+            await App.AddLogEntry("included is " + enabledServices.Count, true );
+            
             foreach (var enabledService in enabledServices)
             {
                 var enabledServiceInfo = enabledService.ResolveInfo.ServiceInfo;
+                
                 await App.AddLogEntry("np. w " + enabledServiceInfo.PackageName, true);
+                
                 if (enabledServiceInfo.PackageName == Android.App.Application.Context.PackageName)
+                {
                     return true;
+                }
             }
-            await App.AddLogEntry("niestety, wylaczona", true);
+
+            await App.AddLogEntry("unfortunately, disabled / wylaczona", true);
 
             return false;
-        }
+
+        }//UslugaWlaczona end
 #endif
 
         /*
+        // TEMP
+
+        // uiAuth_Click
         private void uiAuth_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(AccountSelectionPage));
-        }
+        }//uiAuth_Click end
         */
 
+
+        // uiSettings_Click
         private void uiSettings_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(Settings));
-        }
+
+        }//uiSettings_Click end
+
+
+        // uiShowLog_Click
         private void uiShowLog_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(AppLog));
-        }
 
+        }//uiShowLog_Click end
+
+
+        // uiStartStop_Toggled
         private async void uiStartStop_Toggled(object sender, RoutedEventArgs e)
         {
-            // ten guzik jest tylko Androidowy
-
-#if !__ANDROID__
+            // this button is Android only
+#if __ANDROID__
             uiStartStop.IsEnabled = false;
 #endif
 
             if (p.k.GetPlatform("uwp"))
             {
-                p.k.DialogBox("jakim cudem nacisnales to nie bedac na Androidzie?");
-
-#if !__ANDROID__
+                p.k.DialogBox("How did you press this not to be on Android? ;)");
+                
                 uiStartStop.IsEnabled = true;
-#endif
-                return;
-            }
-
-
-            bool b = true;
-
-#if !__ANDROID__
-            b = uiStartStop.IsOn;
-#endif
-            if (!b)
-            {
-                await App.AddLogEntry("Stopping... @" + DateTime.Now.ToString(), false);
-                App.gbPrzechwytuj = false;
-
-//#if !__ANDROID__
-               // App.gOnedrive?.Dispose();
-               // App.gOnedrive = null;               
-//#endif
-
-#if !__ANDROID__
-                uiStartStop.IsEnabled = true;
-#endif
                 
                 return;
             }
 
-            // 2020.06.29: przestawienie OneDrive przed Accessibility, jako ze pkarmode jest z onedrive a zmienia Accessibility
-            if (!await App.initODandDict(true)) return;  // inicjalizcja OneDrive gdy jeszcze nie bylo, oraz wczytanie slownikow (gdy sie zmienily, wystarczy off/on i juz jest aktualne)
-
 #if __ANDROID__
+            if (!uiStartStop.IsOn)
+            {
+                await App.AddLogEntry("Stopping... @" + DateTime.Now.ToString(), false);
+                App.gbPrzechwytuj = false;
+
+                //TODO
+                //App.gOnedrive?.Dispose();
+                //App.gOnedrive = null;
+
+                uiStartStop.IsEnabled = true;
+                
+                return;
+            }
+
+            // 2020.06.29: Move OneDrive before Accessibility, as pkarmode is 
+            // from onedrive and change Accessibility
+
+            // initialize OneDrive when it was not yet, and load words 
+            // (when they have changed, just off/on and it is already up to date)
+            if (!await App.initODandDict(true)) return;  
+            
+
             if (!await UslugaWlaczona())
             {
-#else
-            if (1 ==1)
-            { 
-#endif
-            bool bIgnore = false;
+                bool bIgnore = false;
 
                 if(p.k.GetSettingsBool("pkarMode"))
                 {
@@ -178,60 +226,62 @@ namespace Andro2UWP
                 if (!bIgnore)
                 {
                     await p.k.DialogBoxResAsync("msgAccessibilityFirst");
-
-#if __ANDROID__
-                    var intent = new Android.Content.Intent(Android.Provider.Settings.ActionAccessibilitySettings);
+                    var intent = new Android.Content.Intent
+                      (
+                        Android.Provider.Settings.ActionAccessibilitySettings
+                      );
+                    
                     Uno.UI.BaseActivity.Current.StartActivity(intent);
-#endif
 
-#if !__ANDROID__
                     uiStartStop.IsOn = false;
                     uiStartStop.IsEnabled = true;
-#endif
+                    
                     return;
                 }
             }
 
+            // Bug ?
+            //p.k.ProgRingShow(true);
 
-            p.k.ProgRingShow(true);
-            // jak tu jestesmy, to na pewno jest to wlaczanie przechwytywania
+            // if we're here, it's definitely an interception. =)
             await App.AddLogEntry("Starting... @" + DateTime.Now.ToString(), false);
 
-            // ustalenie koniecznych zmiennych
+            // determination of necessary variables
             string deviceName = "default";
+
             if (string.IsNullOrEmpty(App.gsDeviceName) || App.gsDeviceName == "default")
             {
-                var AndOSBuildModel = "";
-#if __ANDROID__
-                AndOSBuildModel = Android.OS.Build.Model;
-#endif
-                deviceName = await p.k.DialogBoxInputDirectAsync
-                    (p.k.GetLangString("msgEnterDevName"),
-                    AndOSBuildModel, "resDlgSetName"
+                deviceName = 
+                    await p.k.DialogBoxInputDirectAsync
+                    (
+                        p.k.GetLangString("msgEnterDevName"), 
+                        Android.OS.Build.Model, 
+                        "resDlgSetName"
                     );
-
+                
                 if (deviceName != "")
+                {
                     p.k.SetSettingsString("deviceName", deviceName);
+                }
+
                 App.gsDeviceName = deviceName;
             }
+
             await App.AddLogEntry("mamy devicename=" + deviceName, true);
 
             if (!await App.EnsureOneDriveOpen(true))
             {
                 await App.AddLogEntry("FAIL cannot open OneDrive", false);
-#if __ANDROID__
-                App.gOnedrive?.Dispose();
-                App.gOnedrive = null;
-#endif
+                
+                //TODO
+                //App.gOnedrive?.Dispose();
+                //App.gOnedrive = null;
 
-#if !__ANDROID__
                 uiStartStop.IsOn = false;
-#endif
                 
                 p.k.ProgRingShow(false);
-#if !__ANDROID__
+                
                 uiStartStop.IsEnabled = true;
-#endif
                 
                 return;
             }
@@ -240,32 +290,34 @@ namespace Andro2UWP
 
             // wszystko gotowe, mozesz wyłapywać
             App.gbPrzechwytuj = true;
-#if !__ANDROID__
             uiStartStop.IsEnabled = true;
-#endif
+
             p.k.ProgRingShow(false);
 
+#endif
+        }//uiStartStop_Toggled end 
 
-        }//..._Toggled end
 
+        // uiClearList_Click
         private async void uiClearList_Click(object sender, RoutedEventArgs e)
         {
-            // ma byc: resetlisty (zeby pozbyc sie starszych)
+            // to be: resetlisty (to get rid of older ones)
             //if (p.k.GetPlatform("uwp"))
             //{
-            //    // visibility off, bo niby jak? tozsame z delete all?
-            //    await p.k.DialogBoxAsync("jeszcze nie umiem tego zrobic");
+            //    // visibility's off, because how? tozsame with delete everything?
+            //    await p.k.DialogBoxAsync("I can't do it yet.");
             //}
             //else
-            //{// na Android: czyscimy nie OneDrive, tylko to co na ekranie
+            //{// on Android: we do not clean OneDrive, only what is on the screen
+            
+            App.gToasty.Clear();
+            
+            uiList.ItemsSource = App.gToasty.ToList();
 
-                App.gToasty.Clear();
-#if !__ANDROID__
-                uiList.ItemsSource = App.gToasty.ToList();
-#endif
             //}
 
-        }//uiClearList_Click end
+        }//uiClearList_Click end 
+
 
 
         // uiItem_DoubleTapped
@@ -273,43 +325,66 @@ namespace Andro2UWP
         {
             Grid oGrid;
             oGrid = sender as Grid;
+            
             if (oGrid is null)  return;
+            
+            // Show details 
             p.k.DialogBox(((App.JedenToast)oGrid.DataContext).sMessage);
-        }
 
+        }//uiItem_DoubleTapped end
+
+
+        // MFIdataContext
         private App.JedenToast MFIdataContext(object sender)
         {
             var mfi = (MenuFlyoutItem)sender;
             if (mfi is null)
                 return null;
             return (App.JedenToast)mfi.DataContext;
-        }
+        
+        }// MFIdataContext end
+
+
+        // uiDetails_Click
         private void uiDetails_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
+
             if (toast is null) return;
+            
+            // RnD
+            // Show some toast message (?)
             p.k.DialogBox(toast.sMessage);
         }
+
+
+        // uiRenameSource_Click
         private async void uiRenameSource_Click(object sender, RoutedEventArgs e)
         {
             if (!p.k.GetPlatform("uwp"))
             {
-                p.k.DialogBox("jakim cudem to nacisnales bedac na Androidzie?");
-#if !__ANDROID__
+                p.k.DialogBox("how come you pressed it to be on Android? ;)");
+
                 uiStartStop.IsEnabled = true;
-#endif
+                
                 return;
             }
 
             App.JedenToast toast = MFIdataContext(sender);
+
             if (toast is null) return;
-            var newName = await p.k.DialogBoxInputDirectAsync(
+            
+            var newName = await p.k.DialogBoxInputDirectAsync
+            (
                 p.k.GetLangString("msgSourceShould1") + "'" + toast.sSource + "' " + 
-                p.k.GetLangString("msgSourceShould2") , toast.sSource);
+                p.k.GetLangString("msgSourceShould2") , toast.sSource
+            );
+            
             if (string.IsNullOrEmpty(newName)) return;
+            
             App.gdSenderRenames.Add(toast.sSource, newName);
 
-            // zapisujemy...
+            // we write...
             p.k.ProgRingShow(true);
 
             string dictionaryFile = "";
@@ -318,33 +393,43 @@ namespace Andro2UWP
                 dictionaryFile = dictionaryFile + entry.Key + "|" + entry.Value + "\n";
             }
 
+// "UWP" ONLY (?) TODO: redo it for Android...
 #if ((!__ANDROID__) && (!__WASM__))
             await p.od.ReplaceOneDriveFileContent("Apps/Andro2UWP/sender.renames.txt", dictionaryFile);
 #endif
             RefreshListView(false);
-            p.k.ProgRingShow(false);
-        }
 
+            p.k.ProgRingShow(false);
+
+        }//uiRenameSource_Click end
+
+
+        // UsunPliki / Delete files
         private async System.Threading.Tasks.Task UsunPliki(List<string> lista, bool bMsg)
         {
             p.k.ProgRingShow(true, false, 0, lista.Count);
+
 #if !__ANDROID__
             await p.od.UsunPlikiOneDrive("Apps/Andro2UWP", lista);
 
             for(int iLp = App.gToasty.Count-1; iLp>=0; iLp--)
             {
                 var toast = App.gToasty.ElementAt(iLp);
+                
                 if(lista.Contains(toast.sFileName))
                 {
                     App.gToasty.RemoveAt(iLp);
                 }
             }
+
             // i pokaz nową wersję listy
             RefreshListView(bMsg);
-#endif
+#endif 
             p.k.ProgRingShow(false);
-        }
 
+        }//UsunPliki
+
+        // uiDeleteThis_Click
         private void uiDeleteThis_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
@@ -352,36 +437,62 @@ namespace Andro2UWP
 
             // from list, oraz from OneDrive
 
-            var lista = new List<string>();
+            List<string> lista = new List<string>();
+            
             lista.Add(toast.sFileName);
+            
+            // delete files
             UsunPliki(lista, false);
-        }
+
+        }//uiDeleteThis_Click end
+
+
+        // uiDeleteOlder_Click
         private async void uiDeleteOlder_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
+
             if (toast is null) return;
 
-            if (!await p.k.DialogBoxYNAsync(p.k.GetLangString("msgSureRemoveOlder") + "\n" + toast.displayDate + " ?"))
+            // Show worning dialog box
+            if 
+            (
+                !await p.k.DialogBoxYNAsync(p.k.GetLangString("msgSureRemoveOlder")
+                     + "\n" + toast.displayDate + " ?")
+            )
+            {
                 return;
+            }
 
             // from list, oraz from OneDrive
-            var lista = new List<string>();
+            List<string> lista = new List<string>();
+
             foreach(var item in App.gToasty)
             {
                 if (item.displayDate.CompareTo(toast.displayDate) < 0)
+                {
                     lista.Add(item.sFileName);
+                }
             }
+            
+            // delete files
             await UsunPliki(lista,false);
-        }
 
+        }//uiDeleteOlder_Click end
+
+
+        // uiDeleteThisOlder_Click
         private async void uiDeleteThisOlder_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
 
             if (toast is null) return;
 
+            // show dialog box
             if (!await p.k.DialogBoxYNAsync(p.k.GetLangString("msgSureRemoveThisOlder")))
+            {
                 return;
+            }
 
             // from list, oraz from OneDrive
             var lista = new List<string>();
@@ -390,39 +501,64 @@ namespace Andro2UWP
                 if (item.displayDate.CompareTo(toast.displayDate) <= 0)
                     lista.Add(item.sFileName);
             }
+            
+            // delete files
             await UsunPliki(lista,false);
-        }
+
+        }//uiDeleteThisOlder_Click end
+
+
+        // uiCopy_Click
         private void uiCopy_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
-            p.k.ClipPut(toast.ToString());
-        }
 
+            // ?
+            p.k.ClipPut(toast.ToString());
+
+        }//uiCopy_Click end 
+
+
+        // uiDeleteSender_Click
         private async void uiDeleteSender_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
+            
             if (toast is null) return;
             // from list, oraz from OneDrive
 
-            if (!await p.k.DialogBoxYNAsync(p.k.GetLangString("msgSureRemoveSender") + "\n" + toast.displaySource + " ?"))
+            if
+            (
+                !await p.k.DialogBoxYNAsync(p.k.GetLangString("msgSureRemoveSender") +
+                "\n" + toast.displaySource + " ?")
+            )
+            {
                 return;
+            }
 
             // from list, oraz from OneDrive
-            var lista = new List<string>();
+            List<string> lista = new List<string>();
             foreach (var item in App.gToasty)
             {
                 if (item.displaySource == toast.displaySource)
                     lista.Add(item.sFileName);
             }
+
+            // delete files
             await UsunPliki(lista,false);
 
-        }
+        }//uiDeleteSender_Click end
+
+
+        // uiCreateFilter_Click 
         private async void uiCreateFilter_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
             if (toast is null) return;
 
             var oStack = new Windows.UI.Xaml.Controls.StackPanel();
+
+            // RnD
             //var oDlgTitle = new Windows.UI.Xaml.Controls.TextBlock();
             //oDlgTitle.Text = "New filter";
             //oDlgTitle.HorizontalAlignment = HorizontalAlignment.Center;
@@ -431,6 +567,7 @@ namespace Andro2UWP
             //oStack.Children.Add(oDlgTitle);
 
             var oPackage = new Windows.UI.Xaml.Controls.TextBox();
+
             oPackage.Text = toast.sSource;
             oPackage.Header = "Source package:";
             oStack.Children.Add(oPackage);
@@ -439,13 +576,16 @@ namespace Andro2UWP
             oTitle.Header = "Title:";
             var oText = new Windows.UI.Xaml.Controls.TextBox();
             oText.Header = "Text:";
+            
             foreach(var linia in toast.sMessage.Split('\n'))
             {
                 if (linia.StartsWith("Title: "))
                     oTitle.Text = linia.Substring(7);
+
                 if (linia.StartsWith("Text: "))
                     oText.Text = linia.Substring(6);
             }
+
             oStack.Children.Add(oTitle);
             oStack.Children.Add(oText);
 
@@ -456,11 +596,15 @@ namespace Andro2UWP
             oDlg.Title = p.k.GetLangString("msgAddFilterTitle");
 
             var oCmd = await oDlg.ShowAsync();
+
             //#if !NETFX_CORE
             //            oDlg.Dispose();
             //#endif
+
             if (oCmd == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
                 return;
+            }
 
             App.glFiltry.Add(new App.JedenFiltr(oPackage.Text, oTitle.Text, oText.Text));
             // save filtry
@@ -470,6 +614,7 @@ namespace Andro2UWP
 
 
             string dictionaryFile = "";
+
             foreach (var entry in App.glFiltry)
             {
                 dictionaryFile = dictionaryFile + entry.sPackageName + "|" + entry.sTitle + "|" + entry.sText + "\n";
@@ -478,17 +623,20 @@ namespace Andro2UWP
 #if !__ANDROID__
             await p.od.ReplaceOneDriveFileContent("Apps/Andro2UWP/toasts.filters.txt", dictionaryFile);
 #endif
-            // uiRefreshList_Click(null, null); // <-- to i tak nie filtruje teraz, wiec nie bawimy sie w to
+
+            // uiRefreshList_Click(null, null); // <-- it's not filtering right now anyway, so we're not playing this
+            
             //ProgresywnyRing(false);
             p.k.ProgRingShow(false);
 
-        }
+        }//uiCreateFilter_Click end
 
+
+        // uiRefreshList_Click
         private async void uiRefreshList_Click(object sender, RoutedEventArgs e)
         {
-#if !__ANDROID__
-            uiRefreshList.IsEnabled = false;
-#endif
+            // obsolete button
+            //uiRefreshList.IsEnabled = false;
 
             if (p.k.GetPlatform("uwp"))
             {
@@ -497,20 +645,26 @@ namespace Andro2UWP
                     return;
                 }
 
-                //if (!await App.initODandDict()) return;     // przede wszystkim - odczytanie slownikow na nowo (żeby nie było reset słownika!)
+                //if (!await App.initODandDict())
+                //    return;     // first of all-reading the dictionaries anew (so as not to reset the dictionary!)
+
                 //await App.WczytajNowe();
             }
-#if !__ANDROID__
-            uiRefreshList.IsEnabled = true;
-#endif
 
-            //if (sender != null)   // nie ma wywołania innego niż z Event guzika, więc zawsze sender <> null?
+            // obsolete button
+            //uiRefreshList.IsEnabled = true;
+
+            //if (sender != null)   // there is no call other than from event button, so always sender < > null?
             //{
             //}
 
+            // Refresh "toasts" list
             RefreshListView(true);
-        }
 
+        }//uiRefreshList_Click end
+
+
+        // RefreshListView
         private void RefreshListView(bool bMsg)
         {
             
@@ -545,46 +699,45 @@ namespace Andro2UWP
             // dopiero pozniej ją pokaż
             if (p.k.GetSettingsBool("sortDescending", true))
             {
-#if !__ANDROID__
                 uiList.ItemsSource = (from item in App.gToasty orderby item.sFileName descending select item).ToList();
-#endif
             }
             else
             {
-#if !__ANDROID__
                 uiList.ItemsSource = App.gToasty.ToList();
-#endif
             }
 
-            // oraz ewentualnie usuń guzik kasowania listy
+            // and possibly delete the Delete List button
             if (App.gToasty.Count > 0)
             {
 
                 if (p.k.GetPlatform("uwp"))
                 {
 #if !__ANDROID__
-                    uiClearList.Visibility = Visibility.Visible;
+                    // Make ClearList button visible
+                    //uiClearList.Visibility = Visibility.Visible;
 #endif
                 }
 
             }
-                else
+            else
             {
                 if (bMsg) p.k.DialogBoxRes("msgNoData");
 
                 if (p.k.GetPlatform("uwp"))
                 {
 #if !__ANDROID__
-                    uiClearList.Visibility = Visibility.Collapsed;
+                    //uiClearList.Visibility = Visibility.Collapsed;
 #endif
                 }
             }
 
+        }//RefreshListView end
 
-        }
 
+        // [security reason] uiAutoRefresh does not exist outside UWP
 #if NETFX_CORE
-        // zabezpieczenie - uiAutoRefresh nie istnieje poza UWP
+
+        // uiAutoRefresh_Click
         private async void uiAutoRefresh_Click(object sender, RoutedEventArgs e)
         {
             if(!uiAutoRefresh.IsChecked.HasValue) return;
@@ -596,39 +749,40 @@ namespace Andro2UWP
                     return;
                 }
                 Windows.ApplicationModel.Background.SystemCondition oCondition =
-                    new Windows.ApplicationModel.Background.SystemCondition(Windows.ApplicationModel.Background.SystemConditionType.InternetAvailable);
+                    new Windows.ApplicationModel.Background.SystemCondition
+                    (Windows.ApplicationModel.Background.SystemConditionType.InternetAvailable);
+
                 p.k.RegisterTimerTrigger("Andro2UWP_Timer", 15, false, oCondition);
             }
             else
             {
                 p.k.UnregisterTriggers("Andro2UWP_Timer");
             }
-        }
+        }//uiAutoRefresh_Click end
 #endif
 
+        // ProgresywnyRing
         //private void ProgresywnyRing(bool sStart)
+        //{
+        //    if (sStart)
         //    {
-        //        if (sStart)
-        //        {
-        //            double dVal;
-        //            dVal = Math.Min(uiGrid.ActualHeight, uiGrid.ActualWidth) / 2;
-        //            uiProcesuje.Width = dVal;
-        //            uiProcesuje.Height = dVal;
-
-        //            uiProcesuje.Visibility = Visibility.Visible;
-        //            uiProcesuje.IsActive = true;
-        //        }
-        //        else
-        //        {
-        //            uiProcesuje.IsActive = false;
-        //            uiProcesuje.Visibility = Visibility.Collapsed;
-        //        }
+        //        double dVal;
+        //        dVal = Math.Min(uiGrid.ActualHeight, uiGrid.ActualWidth) / 2;
+        //        uiProcesuje.Width = dVal;
+        //        uiProcesuje.Height = dVal;
+        //
+        //        uiProcesuje.Visibility = Visibility.Visible;
+        //        uiProcesuje.IsActive = true;
         //    }
+        //    else
+        //    {
+        //        uiProcesuje.IsActive = false;
+        //        uiProcesuje.Visibility = Visibility.Collapsed;
+        //    }
+        //}//ProgresywnyRing end
 
+    }//MainPage class end
 
-
-
-    }
-}
+}//namespace end
 
 

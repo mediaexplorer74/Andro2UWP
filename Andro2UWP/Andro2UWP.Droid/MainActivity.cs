@@ -18,7 +18,7 @@ namespace Andro2UWP.Droid
         protected override void OnActivityResult(int requestCode, Result resultCode, Android.Content.Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
-            Uno.OneDrive.Connector.SetAuthenticationContinuationEventArgs(requestCode, resultCode, data);
+            //Uno.OneDrive.Connector.SetAuthenticationContinuationEventArgs(requestCode, resultCode, data);
         }
     }
 }

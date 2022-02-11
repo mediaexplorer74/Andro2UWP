@@ -1,4 +1,5 @@
-﻿//
+﻿// ItemModel
+// Shared code
 
 namespace Andro2UWP.Models
 {

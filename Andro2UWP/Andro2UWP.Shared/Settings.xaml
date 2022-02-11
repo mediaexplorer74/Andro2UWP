@@ -36,11 +36,13 @@
                     <Button x:Uid="uiBattery" Content="Battery" Grid.Column="2" Click="uiPermissBattery_Click" />
                 </Grid>
             </StackPanel>
-            <StackPanel x:Name="uiSettingsDrain" not_win:Visibility="Collapsed" >
+            
+            <!-- <StackPanel x:Name="uiSettingsDrain" not_win:Visibility="Collapsed" >  -->
+            <StackPanel x:Name="uiSettingsDrain">
                 <ToggleSwitch x:Name="uiCreateToasts" Header="Create toasts from remote data" />
             </StackPanel>
 
-            <!-- wspolne dla obu -->
+            <!-- common for both -->
             <ToggleSwitch x:Uid="uiDebugLog" OnContent="Add debug info to log" OffContent="Shorter log" Name="uiDebugLog" />
             <!-- <Grid Margin="5" Visibility="Collapsed" >
                 <Grid.ColumnDefinitions>
@@ -52,10 +54,17 @@
                 <Button Content="sender renames" Grid.Column="1" Click="uiShowRenames_Click" />
                 <Button Content="filters" Grid.Column="2" Click="uiShowFilters_Click" />
             </Grid> -->
+            
             <!--<TextBox Header="How many last notification show" InputScope="Number" x:Uid="uiHowMany" win:Visibility="Collapsed" />-->
+            <!-- my RnD -->
+            <TextBox x:Uid="uiHowMany" Text="123" Header="[temp] How many last notification show" InputScope="Number"/>
+            
             <ToggleSwitch Header="Sort toast list" OnContent="Descending" OffContent="Ascending" Name="uiSortListMode" />
+            
             <Button x:Uid="uiResetList" Content="Reset cache list" Click="uiResetList_Click" Visibility="Collapsed"  />
+            
             <Button HorizontalAlignment="Center" x:Uid="uiSave" Content="Save!" Click="uiSave_Click" Margin="0,20,0,0" />
+        
         </StackPanel>
 
     </Grid>

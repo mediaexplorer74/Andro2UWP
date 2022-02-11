@@ -29,12 +29,16 @@
         <TextBlock Text="" FontSize="10" HorizontalAlignment="Center" Grid.Row="1" Margin="5" Name="uiVersion"/>
 
         <!--  Android controls -->
-        <ToggleSwitch x:Uid="uiStartStop" OnContent="Started" OffContent="Stopped" Toggled="uiStartStop_Toggled" Name="uiStartStop" Grid.Row="2" Margin="5" win:Visibility="Collapsed" />
+        <!--  win:Visibility="Collapsed" -->
+        <ToggleSwitch x:Uid="uiStartStop" OnContent="Started" OffContent="Stopped" Toggled="uiStartStop_Toggled" Name="uiStartStop" 
+                      Grid.Row="2" Margin="5" 
+                      win:Visibility="Collapsed"/>
+        
         <!-- UWP controls -->
-        <Button Content="Clear list" Click="uiClearList_Click" Visibility="Collapsed" Grid.Row="2" Name="uiClearList"/>
+        <!--Button Content="Clear list" Click="uiClearList_Click" Visibility="Collapsed" Grid.Row="2" Name="uiClearList"/-->
 
         <!-- common controls -->
-        <Button Content="Refresh" x:Uid="uiRefreshList" HorizontalAlignment="Right" Grid.Row="2" Click="uiRefreshList_Click" Name="uiRefreshList" not_win:Visibility="Collapsed" />
+        <!--Button Content="Refresh" x:Uid="uiRefreshList" HorizontalAlignment="Right" Grid.Row="2" Click="uiRefreshList_Click" Name="uiRefreshList" not_win:Visibility="Collapsed" /-->
 
         <!-- jeszcze nie wiem co tu ma byc :) -->
 
@@ -91,10 +95,15 @@
         <not_win:Grid Grid.Row="4" Name="uiAndroBottom" Margin="0,10,0,0">
             <StackPanel Orientation="Horizontal" >
                 <AppBarButton Icon="Refresh" x:Uid="uiRefresh" Label="Refresh list" Click="uiRefreshList_Click"/>
+                
                 <AppBarSeparator/>
+                
                 <AppBarButton Icon="Delete" x:Uid="uiClearList" Label="Clear list" Click="uiClearList_Click"/>
+                
                 <AppBarSeparator/>
+                
                 <AppBarButton Icon="Setting" x:Uid="uiSettings" Label="Settings" Click="uiSettings_Click"/>
+                
                 <AppBarButton Icon="List" x:Uid="uiShowLog" Label="Show log" Click="uiShowLog_Click"/>
             </StackPanel>
 
@@ -103,10 +112,15 @@
     <Page.BottomAppBar>
         <win:CommandBar>
             <AppBarButton Icon="Refresh" x:Uid="uiRefresh" Label="Refresh list" Click="uiRefreshList_Click"/>
+            
             <AppBarToggleButton Icon="Clock" x:Uid="uiAutoRefresh" Name="uiAutoRefresh" Label="Auto refresh" Click="uiAutoRefresh_Click" />
+            
             <AppBarSeparator/>
+            
             <AppBarButton Icon="Setting" x:Uid="uiSettings" Label="Settings" Click="uiSettings_Click"/>
+            
             <AppBarButton Icon="List" x:Uid="uiShowLog" Label="Show log" Click="uiShowLog_Click"/>
+            
             <!--AppBarSeparator/>
             <AppBarButton Icon="XboxOneConsole" x:Uid="uiAuth" Label="Auth." Click="uiAuth_Click"/-->
         </win:CommandBar>

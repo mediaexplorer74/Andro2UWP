@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="Me1.Andro2UWP-3df45" Publisher="CN=media" Version="1.0.6.0" />
+  <Identity Name="Andro2UWP1" Publisher="CN=media" Version="1.0.11.0" />
   <mp:PhoneIdentity PhoneProductId="d0cc5bdd-f438-4335-a112-49cb246ce412" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Andro2UWP</DisplayName>

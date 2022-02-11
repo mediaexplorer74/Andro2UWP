@@ -1,48 +1,7 @@
-/*
- 
-//../../../_mojeSuby/pkarModule-Uno3-1-6.cs
+// pkModuleShared
+// Both for UWP and Android
+// 2022
 
-// (...)
-// AddHandler rootFrame.NavigationFailed, AddressOf OnNavigationFailed
-// 
-// ' PKAR added wedle https://stackoverflow.com/questions/39262926/uwp-hardware-back-press-work-correctly-in-mobile-but-error-with-pc
-// AddHandler rootFrame.Navigated, AddressOf OnNavigatedAddBackButton
-// AddHandler Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested, AddressOf OnBackButtonPressed
-// (...)
-
-### I already assume the correct Uno my own, without a functional reset
-
-2019.10.25
-* Clipboard for UWP goes as before, for UWP - no NuGet(so you don't have to add Reference as app is UWP only)
-* new feature: DialogBoxInput(uncommented)
-* new function: SetSettingsInt(double) - with conversion(because C # does not convert itself)
-  
-2019.09.10
- * new function: GetPlatform(android, uwp, ios, wasm, other) - also as bool, int, string
-
-
-2019.09.03
- * added MakeToast(thanks to Nuget)
- * ..thanks to which I added CrashMessageAdd
- * I added CrashMessageExit
-
-
-2019.08.31
- * turned on full code analysis, and added:
-    * .ConfigureAwait(true)[ie default, you could disable this warning]
-    * ToString and int.Parse(and similar): cultureinvariant, or currentculture
-    * some null tests
-
- 2019.08.27
-* new function: string GetAppVers() - works theoretically for UWP, Android and iOS
-* remake ClipBoard to universal version(requires Nuget)
-* IsMobile: UWP so far, macOS always NO, rest(Android, iOS, WASM) always YES
-* changing the method of obtaining a computer name(maybe universal)
-
-2019.08.26
-* migration to VC
-* comment on what is not crossplatform(upload it to pkarmodule.cs in UWP)
-*/
 
 using System;
 using System.Collections.Generic;
@@ -58,11 +17,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Andro2UWP;
-
 
 
 // ! TODO-s: do Strings:
@@ -2157,37 +2114,55 @@ namespace p
         public async static Task<string> DialogBoxInput(string sMsgResId, string sDefaultResId = "", string sYesResId = "resDlgContinue", string sNoResId = "resDlgCancel")
         {
             string sMsg, sYes, sNo, sDefault;
+            
             sDefault = "";
+            
             {
                 var withBlock = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+                
                 sMsg = withBlock.GetString(sMsgResId);
+                
                 sYes = withBlock.GetString(sYesResId);
+                
                 sNo = withBlock.GetString(sNoResId);
+                
                 if (!string.IsNullOrEmpty(sDefaultResId))
                     sDefault = withBlock.GetString(sDefaultResId);
             }
 
             if (string.IsNullOrEmpty(sMsg))
                 sMsg = sMsgResId;  // zabezpieczenie na brak string w resource
+
             if (string.IsNullOrEmpty(sYes))
                 sYes = sYesResId;
+            
             if (string.IsNullOrEmpty(sNo))
                 sNo = sNoResId;
+            
             if (string.IsNullOrEmpty(sDefault))
                 sDefault = sDefaultResId;
+            
             var oInputTextBox = new TextBox();
+            
             oInputTextBox.AcceptsReturn = false;
+            
             oInputTextBox.Text = sDefault;
+            
             var oDlg = new ContentDialog();
+            
             oDlg.Content = oInputTextBox;
+            
             oDlg.PrimaryButtonText = sYes;
+            
             oDlg.SecondaryButtonText = sNo;
+            
             oDlg.Title = sMsg;
 
             var oCmd = await oDlg.ShowAsync();
 
             if (oCmd != ContentDialogResult.Primary)
                 return "";
+            
             return oInputTextBox.Text;
         }
 
@@ -2228,10 +2203,12 @@ namespace p
             }
 
             var oInputTextBox = new TextBox();
+
             oInputTextBox.AcceptsReturn = false;
             oInputTextBox.Text = sDefault;
 
             var oDlg = new ContentDialog();
+
             oDlg.Content = oInputTextBox;
             oDlg.Title = sMsg;
 
@@ -2245,10 +2222,14 @@ namespace p
             return oInputTextBox.Text;
         }
 
-        //
+        // for getting DeviceName, for example
         public async static Task<string> DialogBoxInputDirectAsync(string sMsgResId, string Model, string sDefaultResId = "")
         {
             string sMsg, sYes, sNo, sDefault;
+
+            // My!
+            sYes = "OK";
+
             sDefault = "";
             {
                 var withBlock = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
@@ -2271,11 +2252,18 @@ namespace p
             }
 
             var oInputTextBox = new TextBox();
+
             oInputTextBox.AcceptsReturn = false;
+            
             oInputTextBox.Text = sDefault;
 
             var oDlg = new ContentDialog();
+            
             oDlg.Content = oInputTextBox;
+
+            // My !
+            oDlg.PrimaryButtonText = sYes; 
+
             oDlg.Title = sMsg;
 
             var oCmd = await oDlg.ShowAsync();

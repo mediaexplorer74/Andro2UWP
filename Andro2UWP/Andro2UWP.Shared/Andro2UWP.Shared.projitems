@@ -28,6 +28,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\ItemModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OnedriveUno.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)pkModuleShared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -52,9 +53,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-us\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\ru\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-us\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\pl\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\ru\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)priconfig.default.xml" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Shared : One Drive Service "Uno"
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -8,8 +10,10 @@ using System.Collections.ObjectModel;
 using Andro2UWP;
 using Windows.UI.Xaml;
 
+// p, pkar's thing =)
 namespace p
 {
+    // od, onedrive class
     class od
     {
 
@@ -31,9 +35,8 @@ namespace p
         public static bool IsOneDriveOpened()
         {
             var app = (App)Application.Current;
-
-                           //return goOneDriveClnt != null;
-                return app.uOneDriveClient != null;
+                           
+            return app.uOneDriveClient != null;
         }
 
         public async static Task<bool> OpenOneDrive(bool limitToAppFolder, bool bInteractive)
@@ -47,8 +50,10 @@ namespace p
             gInOneDriveCommand = true;
 
             bool bRet = await OpenOneDriveInt(bInteractive);
+
             gbLimitToAppFolder = limitToAppFolder;
             gInOneDriveCommand = false;
+            
             return bRet;
         }
 
@@ -342,10 +347,17 @@ namespace p
                 gInOneDriveCommand = false;
                 return "";
             }
-        }
+
+        }//
 
 
-        public async static Task<string> SaveFileToOneDrive(Windows.Storage.StorageFile oFile, string sFolderPath, bool bCanResetWifi)
+        // SaveFileToOneDrive
+        public async static Task<string> SaveFileToOneDrive
+        (
+            Windows.Storage.StorageFile oFile, 
+            string sFolderPath,
+            string sMessage //bool bCanResetWifi
+        )
         {
             var app = (App)Application.Current;
 
@@ -370,6 +382,7 @@ namespace p
             try
             {
                 Stream oStream = await oFile.OpenStreamForReadAsync();
+                
                 if (!oStream.CanRead)
                 {
                     p.k.CrashMessageAdd("@CopyFileToOneDrive", "not readable stream?");
@@ -427,12 +440,14 @@ namespace p
                 oStream = null;
 
                 string sLink = "";
+
                 if (oItem != null)
                 {
                     Microsoft.OneDrive.Sdk.Permission oLink = null/* TODO Change to default(_) if this is not a reference type */;
 
                     oLink = await
                         app.uOneDriveClient.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
+                    
                     //goOneDriveClnt.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
 
                     sLink = oLink.Link.ToString();
@@ -453,7 +468,9 @@ namespace p
                 gInOneDriveCommand = false;
                 return "";
             }
-        }
+        
+        }//
+
 
         // ReadOneDriveTextFileId(string sFileId)
         public async static Task<string> ReadOneDriveTextFileId(string sFileId)

@@ -23,7 +23,8 @@ namespace Andro2UWP.Droid
     public class Application : Windows.UI.Xaml.NativeApplication
     {
         public Application(IntPtr javaReference, JniHandleOwnership transfer)
-          : base(() => new App(), javaReference, transfer) // linia dla nowszej wersji
+           //  : base(new App(), javaReference, transfer)    // linia dla starszej wersji
+           : base(() => new App(), javaReference, transfer) // linia dla nowszej wersji
         {
             ConfigureUniversalImageLoader();
         }

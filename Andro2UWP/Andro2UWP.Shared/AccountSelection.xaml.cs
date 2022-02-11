@@ -2,8 +2,8 @@
 namespace Andro2UWP
 {
 #if __ANDROID__
-   using Android.App;
-   using Android.Content;   
+    using Android.App;
+    using Android.Content;
 #endif
     using Microsoft.Graph;
     using Microsoft.OneDrive.Sdk;
@@ -14,7 +14,7 @@ namespace Andro2UWP
     using System.Threading.Tasks;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
-    
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -26,7 +26,7 @@ namespace Andro2UWP
             Consumer,
             ConsumerUwp
         }
-        
+
         // Set these values to your app's ID and return URL.
         private readonly string oneDriveForBusinessClientId = "Insert your OneDrive for Business client id";
         private readonly string oneDriveForBusinessReturnUrl = "http://localhost:8080";
@@ -36,11 +36,11 @@ namespace Andro2UWP
         private readonly string oneDriveConsumerReturnUrl = "msal560b76b6-f929-4200-b8b0-70892f08f94a://auth";//"https://login.live.com/oauth20_desktop.srf";
         private readonly string oneDriveConsumerBaseUrl = "https://api.onedrive.com/v1.0";
 
-        private readonly string[] scopes = new string[] 
-        {            
+        private readonly string[] scopes = new string[]
+        {
             "onedrive.readonly", // ok! //"onedrive.readwrite", //RnD
             "onedrive.appfolder", // ok
-            "wl.signin", 
+            "wl.signin",
             "offline_access"
         };
 
@@ -54,9 +54,9 @@ namespace Andro2UWP
 
         private async void AccountSelection_Loaded(object sender, RoutedEventArgs e)
         {
-            
-            App app = ((App) Windows.UI.Xaml.Application.Current);
-            
+
+            App app = ((App)Windows.UI.Xaml.Application.Current);
+
 
             if (app.uOneDriveClient != null)
             {
@@ -71,7 +71,7 @@ namespace Andro2UWP
                 //{
                 //    await adalAuthProvider.SignOutAsync();
                 //}
-                
+
                 app.uOneDriveClient = null;
             }
 
@@ -106,8 +106,8 @@ namespace Andro2UWP
 
         private async void InitializeClient(ClientType clientType, RoutedEventArgs e)
         {
-            
-            var app = (App) Windows.UI.Xaml.Application.Current;
+
+            var app = (App)Windows.UI.Xaml.Application.Current;
 
             if (app.uOneDriveClient == null)
             {
@@ -132,23 +132,23 @@ namespace Andro2UWP
 
                     app.AuthProvider = adalAuthProvider; // !
                     */
-                   
+
                 }
                 else if (clientType == ClientType.ConsumerUwp)
                 {
-                   /*
-                    var onlineIdAuthProvider = new OnlineIdAuthenticationProvider
-                    (
-                        this.scopes
-                    );
+                    /*
+                     var onlineIdAuthProvider = new OnlineIdAuthenticationProvider
+                     (
+                         this.scopes
+                     );
 
-                    authTask = onlineIdAuthProvider.RestoreMostRecentFromCacheOrAuthenticateUserAsync();
+                     authTask = onlineIdAuthProvider.RestoreMostRecentFromCacheOrAuthenticateUserAsync();
 
-                    app.uOneDriveClient = new OneDriveClient(this.oneDriveConsumerBaseUrl, onlineIdAuthProvider);
-                    
-                    app.AuthProvider = onlineIdAuthProvider; // !
-                   */
-                    
+                     app.uOneDriveClient = new OneDriveClient(this.oneDriveConsumerBaseUrl, onlineIdAuthProvider);
+
+                     app.AuthProvider = onlineIdAuthProvider; // !
+                    */
+
                 }
                 else
                 {
@@ -163,7 +163,7 @@ namespace Andro2UWP
                     );
 #else
                     Android.Content.Context ctxt = Android.App.Application.Context;
-                    
+
                     var msaAuthProvider = new MsaAuthenticationProvider
                     (
                         ctxt, // RnD
@@ -186,9 +186,9 @@ namespace Andro2UWP
                 try
                 {
                     //await authTask;
-                    
+
                     //app.NavigationStack.Add(new ItemModel(new Item()));
-                    
+
                     this.Frame.Navigate(typeof(MainPage), e);
                 }
                 catch (Exception ex) //catch (ServiceException exception)
@@ -205,16 +205,16 @@ namespace Andro2UWP
             }
             //else
             //{
-                // Go to Main page
-                this.Frame.Navigate(typeof(MainPage), e);
+            // Go to Main page
+            this.Frame.Navigate(typeof(MainPage), e);
             //}
-            
+
 
             //temp
             //this.Frame.Navigate(typeof(MainPage), e);
 
         }//InitializeClient
-    
+
     }//class end
 
 }//namespace end

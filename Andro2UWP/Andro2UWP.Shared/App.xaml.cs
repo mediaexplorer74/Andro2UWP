@@ -2,7 +2,10 @@
 // Shared code
 // 2022
 
-
+//#if __ANDROID__
+//using Android.App;
+//using Android.Content;
+//#endif
 using Andro2UWP.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
@@ -29,7 +32,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace Andro2UWP
-{   
+{
 
     sealed partial class App : Application
     {
@@ -100,7 +103,7 @@ namespace Andro2UWP
 
                 // PKAR added wedle https://stackoverflow.com/questions/39262926/uwp-hardware-back-press-work-correctly-in-mobile-but-error-with-pc
                 rootFrame.Navigated += OnNavigatedAddBackButton;
-                
+
                 Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += OnBackButtonPressed;
 
                 //if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -141,7 +144,7 @@ namespace Andro2UWP
                 rootFrame.Navigate(typeof(MainPage), e.Arguments);
 
             }
-            
+
             // Ensure the current window is active
             Windows.UI.Xaml.Window.Current.Activate();
 
@@ -156,7 +159,7 @@ namespace Andro2UWP
 
             if (app.uOneDriveClient != null)
             {
-                MsaAuthenticationProvider msaAuthProvider = 
+                MsaAuthenticationProvider msaAuthProvider =
                     app.AuthProvider as MsaAuthenticationProvider;
                 //var adalAuthProvider = app.AuthProvider as AdalAuthenticationProvider;
 
@@ -182,7 +185,7 @@ namespace Andro2UWP
         {
             Frame rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
 
-            var app = (App)Application.Current;            
+            var app = (App)Application.Current;
 
             if (app.uOneDriveClient == null)
             {
@@ -217,7 +220,7 @@ namespace Andro2UWP
 
                 // RnD
                 // = null;
-                app.uOneDriveClient = 
+                app.uOneDriveClient =
                     new OneDriveClient
                     (
                         GoneDriveConsumerBaseUrl, //this.GoneDriveConsumerBaseUrl, 
@@ -225,7 +228,7 @@ namespace Andro2UWP
                     );
 
                 app.AuthProvider = msaAuthProvider; // !
-            
+
 
                 try
                 {
@@ -234,7 +237,7 @@ namespace Andro2UWP
                     //app.NavigationStack.Add(new ItemModel(new Item()));
 
                     //this.Frame.Navigate(typeof(MainPage), e);
-                               
+
                 }
                 catch (Exception ex) //catch (ServiceException exception)
                 {
@@ -245,16 +248,15 @@ namespace Andro2UWP
                     Debug.WriteLine("AccountSelection - InitializeClient - exception: " + ex.Message);
 
                     // TODO : error hadling
-                    
-                    //  Redirect to MainPage
-                    rootFrame.Navigate(typeof(MainPage));//, e.Arguments);
+
+                    // RnD: Redirect to MainPage from here...
+                    //rootFrame.Navigate(typeof(MainPage));//, e.Arguments);
                 }
 
             }
 
-            //  Redirect to MainPage
-            // RnD
-            rootFrame.Navigate(typeof(MainPage));//, e.Arguments);
+            // RnD: Redirect to MainPage from here...
+            //rootFrame.Navigate(typeof(MainPage));//, e.Arguments);
 
         }//SignInIfNeeded
 
@@ -312,10 +314,10 @@ namespace Andro2UWP
 #endif
             */
         }
-        
-#endregion
 
-#region "BackButton"
+        #endregion
+
+        #region "BackButton"
         // PKAR added wedle https://stackoverflow.com/questions/39262926/uwp-hardware-back-press-work-correctly-in-mobile-but-error-with-pc
         private void OnNavigatedAddBackButton(object sender, NavigationEventArgs e)
         {
@@ -343,7 +345,7 @@ namespace Andro2UWP
             {
             }
         }
-#endregion
+        #endregion
 
         //public static string _timerString = "";
         //public static int _timerCount = 0;
@@ -377,7 +379,7 @@ namespace Andro2UWP
                 await LoadNews(false);
 
                 int iNewCnt = App.gToasty.Count - iStanPrzed;
-                
+
                 p.k.DebugOut("iStanPo = " + App.gToasty.Count.ToString());
                 if (iNewCnt > 0)
                 {
@@ -401,11 +403,11 @@ namespace Andro2UWP
         public async static System.Threading.Tasks.Task<bool> LoadNews(bool bMsg)
         {
             p.k.DebugOut("LoadNews(" + bMsg.ToString());
-             
-            if(! await initODandDict(bMsg) ) 
-		    {
-		    return false;     // przede wszystkim - odczytanie slownikow na nowo (żeby nie było reset słownika!)
-		    }
+
+            if (!await initODandDict(bMsg))
+            {
+                return false;     // przede wszystkim - odczytanie slownikow na nowo (żeby nie było reset słownika!)
+            }
 
             //await WczytajNowe(bMsg);
             await LoadNew(bMsg);
@@ -423,37 +425,56 @@ namespace Andro2UWP
             }
 
 #if __ANDROID__
+            /*
             if (App.gOnedrive != null)
                 return true;
 
-                await App.AddLogEntry("inicjalizacja gOneDrive",true);
-                Uno.OneDrive.Connector.Init(Android.App.Application.Context);
+            await App.AddLogEntry("inicjalizacja gOneDrive", true);
+            Uno.OneDrive.Connector.Init(Android.App.Application.Context);
 
-                string[] scopes = { "Files.ReadWrite" };
-                App.gOnedrive = new Uno.OneDrive.Connector
-                (
-                                 //"287faaf5-69f4-46e7-977e-1980e19790d0"
-                   //"560b76b6-f929-4200-b8b0-70892f08f94a"
-                   GoneDriveConsumerClientId,  
-                   scopes
-                   );
-            
+            string[] scopes = { "Files.ReadWrite" };
+            App.gOnedrive = new Uno.OneDrive.Connector
+            (
+               //"287faaf5-69f4-46e7-977e-1980e19790d0"
+               //"560b76b6-f929-4200-b8b0-70892f08f94a"
+               GoneDriveConsumerClientId,
+               scopes
+               );
+
             //RnD
             // await App.gOnedrive.DisconnectAsync();
-            
+
             if (!await App.gOnedrive.ConnectAsync())
-                {
-                    await App.AddLogEntry("FAIL initializing OneDrive",false);
-                    await p.k.DialogBoxResAsync("errOneDriveInit");
-                    return false;
-                }
+            {
+                await App.AddLogEntry("FAIL initializing OneDrive", false);
+                await p.k.DialogBoxResAsync("errOneDriveInit");
+                return false;
+            }
 
             if (App.gAppFolder is null)
-            {   
+            {
                 // to jest to samo niezaleznie od on/off samego konektora
-                await App.AddLogEntry("inicjalizacja gAppFolder",true);
+                await App.AddLogEntry("inicjalizacja gAppFolder", true);
 
                 App.gAppFolder = await App.gOnedrive.GetThisAppFolderAsync();
+            }
+            */
+
+            if (p.od.IsOneDriveOpened())
+                return true;
+
+            // if (!bMsg) return false;
+
+            try
+            {
+                if (!await p.od.OpenOneDrive(true, bMsg))
+                    return false;
+
+                return true;
+            }
+            catch
+            {
+                //
             }
 #else
             if (p.od.IsOneDriveOpened())
@@ -488,7 +509,8 @@ namespace Andro2UWP
             string dictionaryFile = "";
 
 #if __ANDROID__
-            dictionaryFile = await App.gOnedrive.ReadFile(App.gAppFolder, "toasts.filters.txt");
+            //dictionaryFile = await App.gOnedrive.ReadFile(App.gAppFolder, "toasts.filters.txt");
+            dictionaryFile = await p.od.ReadOneDriveTextFile("Apps/Andro2UWP/toasts.filters.txt");
 #else
             dictionaryFile = await p.od.ReadOneDriveTextFile("Apps/Andro2UWP/toasts.filters.txt");
 #endif
@@ -527,7 +549,7 @@ namespace Andro2UWP
             //App.glFiltry.Add(new App.JedenFiltr("android", "* is using battery", ""));
             //App.glFiltry.Add(new App.JedenFiltr("com.android.vending", "* new updates", ""));
             //App.glFiltry.Add(new App.JedenFiltr("com.microsoft.skydrive", "Backing up your photos...", ""));
-        
+
         }//LoadFilterDictionary end
 
         // WczytajSlownikSource
@@ -537,7 +559,8 @@ namespace Andro2UWP
 
             string dictionaryFile = "";
 #if __ANDROID__
-            dictionaryFile = await App.gOnedrive.ReadFile(App.gAppFolder, "sender.renames.txt");
+            //dictionaryFile = await App.gOnedrive.ReadFile(App.gAppFolder, "sender.renames.txt");
+            dictionaryFile = await p.od.ReadOneDriveTextFile("Apps/Andro2UWP/sender.renames.txt");
 #else
             dictionaryFile = await p.od.ReadOneDriveTextFile("Apps/Andro2UWP/sender.renames.txt");
 #endif
@@ -550,7 +573,7 @@ namespace Andro2UWP
             App.gdSenderRenames.Clear();
 
             var dictEntries = dictionaryFile.Split('\n');
-            
+
             foreach (string entry in dictEntries)
             {
                 if (!string.IsNullOrEmpty(entry))
@@ -564,7 +587,7 @@ namespace Andro2UWP
                 }
 
             }
-            
+
             await App.AddLogEntry("Read " + App.gdSenderRenames.Count.ToString() + " sender.renames entries", false);
 
         }//LoadDictionarySource end
@@ -575,7 +598,8 @@ namespace Andro2UWP
             p.k.DebugOut("CheckPkarFile");
             string dictionaryFile = "";
 #if __ANDROID__
-            dictionaryFile = await App.gOnedrive.ReadFile(App.gAppFolder, "pkar.mode.txt");
+            //dictionaryFile = await App.gOnedrive.ReadFile(App.gAppFolder, "pkar.mode.txt");
+            dictionaryFile = await p.od.ReadOneDriveTextFile("Apps/Andro2UWP/pkar.mode.txt");
 #else
             dictionaryFile = await p.od.ReadOneDriveTextFile("Apps/Andro2UWP/pkar.mode.txt");
 #endif
@@ -589,6 +613,7 @@ namespace Andro2UWP
         {
             p.k.DebugOut("initODandDict(" + bMsg.ToString());
 
+            /*
             //ProgresywnyRing(true);
             if (bMsg) p.k.ProgRingShow(true);
 
@@ -600,12 +625,13 @@ namespace Andro2UWP
                 //ProgresywnyRing(false);
 
                 if (bMsg)
-                { 
-                    p.k.ProgRingShow(false); 
+                {
+                    p.k.ProgRingShow(false);
                 }
-                
+
                 return false;
             }
+            */
 
             // Load only when connected to OneDrive
             await LoadDictionarySource(); // CAUTION: there is no progressring!
@@ -632,7 +658,7 @@ namespace Andro2UWP
 
             if (!p.k.GetPlatform("uwp"))
             {
-                if(bMsg) await p.k.DialogBoxAsync("How did you press it not to be on UWP?");
+                if (bMsg) await p.k.DialogBoxAsync("How did you press it not to be on UWP?");
                 return;
             }
 
@@ -823,7 +849,7 @@ namespace Andro2UWP
 
             if (rootFrame.Content == null)
             {
-                
+
                 //MakeDebugToast("OnActivated - OPEN NULL"); // TODO
 
                 rootFrame.Navigate(typeof(MainPage));
@@ -832,7 +858,7 @@ namespace Andro2UWP
             Window.Current.Activate();
         }
 
-#region "logfile"
+        #region "logfile"
         public static async System.Threading.Tasks.Task<Windows.Storage.StorageFile> GetLogFile()
         {
             Windows.Storage.StorageFolder oFold = Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -848,12 +874,13 @@ namespace Andro2UWP
             if (onlyInDebug && !p.k.GetSettingsBool("debugLog"))
                 return;
 
-            var oFile = await GetLogFile();
+            Windows.Storage.StorageFile oFile = await GetLogFile();
             if (oFile is null) return;
 
             try
             {
-                await Windows.Storage.FileIO.AppendTextAsync(oFile, message + "\n", Windows.Storage.Streams.UnicodeEncoding.Utf8);
+                await Windows.Storage.FileIO.AppendTextAsync(
+                    oFile, message + "\n", Windows.Storage.Streams.UnicodeEncoding.Utf8);
             }
             catch
             {
@@ -863,7 +890,7 @@ namespace Andro2UWP
         }
 
 
-#endregion
+        #endregion
 
 
         public static List<JedenToast> gToasty = new List<JedenToast>();
@@ -875,18 +902,21 @@ namespace Andro2UWP
         public static List<JedenFiltr> glFiltry = new List<JedenFiltr>();
 
 #if __ANDROID__
-        public static Uno.OneDrive.Connector gOnedrive = null;
-        public static Uno.OneDrive.FileData gAppFolder = null;
+        //public static Uno.OneDrive.Connector gOnedrive = null;
+        //public static Uno.OneDrive.FileData gAppFolder = null;
 
 
         static bool bInOneDriveSending = false;
 
+        // WriteToast (to OneDrive)
         public async void ZapiszToast(JedenToast toast)
         {
             // uzupelnij dane - mamy tylko czas i glowny tekst
             toast.sDevice = gsDeviceName;
             toast.iNumber = ++giCurrentNumber;
+
             p.k.SetSettingsInt("currentFileNum", giCurrentNumber);
+            
             await AddLogEntry("numer kolejny: " + giCurrentNumber, true);
 
             gToasty.Add(toast);
@@ -906,7 +936,7 @@ namespace Andro2UWP
             // jesli jest siec, to mozemy wyslac do OneDrive wszystkie ktorych jeszcze sie nie wyslalo
             for (int iLoop = 0; iLoop < gToasty.Count; iLoop++)
             {
-                var oItem = gToasty.ElementAt(iLoop);
+                JedenToast oItem = gToasty.ElementAt(iLoop);
 
                 if (oItem.bOnOneDrive) continue;    // juz wyslany
 
@@ -914,10 +944,27 @@ namespace Andro2UWP
 
                 oItem.sFileName = gsDeviceName + "." + oItem.iNumber.ToString("00000") + "-" +
                     oItem.dDate.ToString("yyyy.MM.dd_HH.mm") + ".toast.txt";
+
                 await AddLogEntry("filename: " + oItem.sFileName, false);
 
-                Uno.OneDrive.FileData oSent = await gOnedrive.SaveFile(gAppFolder, oItem.sFileName, oItem.sMessage);
 
+                // old scheme ("android" onedrive, gAppFolder)
+                //Uno.OneDrive.FileData oSent = await gOnedrive.SaveFile(gAppFolder, oItem.sFileName, oItem.sMessage);
+
+
+                // RnD: new scheme (universil shared code of ondrive service)
+                Windows.Storage.StorageFolder oFold = Windows.Storage.ApplicationData.Current.LocalFolder;
+                Windows.Storage.StorageFile sFile = await oFold.CreateFileAsync(oItem.sFileName, 
+                Windows.Storage.CreationCollisionOption.OpenIfExists);
+               
+                             
+                string oSent = await p.od.SaveFileToOneDrive
+                    (
+                    sFile, 
+                    "Apps/Andro2UWP",// onedrive special folder
+                    oItem.sMessage); 
+                
+                // RnD: TEST IT!!
                 // jesli sie nie udalo wyslanie, to nie wysylaj nastepnych
                 if (oSent is null)
                 {
@@ -932,7 +979,7 @@ namespace Andro2UWP
             bInOneDriveSending = false;
         }
 
-#region "handling accessiblity trigger"
+        #region "handling accessiblity trigger"
 
         //<service>
         // <meta-data
@@ -950,9 +997,9 @@ namespace Andro2UWP
         public class AndroToast : Android.AccessibilityServices.AccessibilityService
         {
 
-            private string GlueString(string input, Android.OS.Bundle extras, string prefix, string extraName )
+            private string GlueString(string input, Android.OS.Bundle extras, string prefix, string extraName)
             {
-                if(extras is null) return input;
+                if (extras is null) return input;
 
                 var appendix = extras.GetString(extraName);
 
@@ -961,7 +1008,7 @@ namespace Andro2UWP
 
                 if (input.Contains(": " + appendix))
                     return input;   // ale to cos juz bylo zapisane (np. Title i TitleBig), wiec po co mnozyc dlugosc... 
-                
+
                 return input + prefix + ": " + appendix + "\n";
             }
 
@@ -1066,7 +1113,7 @@ namespace Andro2UWP
 
 
                 var androToast = (Android.App.Notification)e.ParcelableData;
-                if(androToast is null)
+                if (androToast is null)
                 {
 
                     AddLogEntry("ignoruje, bo !androToast (znaczy messageBox?)", false);
@@ -1108,7 +1155,7 @@ namespace Andro2UWP
                 // 2021.07.18, ponieważ jakoby nie było pełnej informacji (np. fotka: że oddała na mnie głos, WhatsApp: treści powiadomień)
                 string sEventText = ""; // "Event", bo z Event, a nie z Extras
                 var lText = e.Text;
-                if(lText != null)
+                if (lText != null)
                 {
                     foreach (var sLine in lText)
                     {
@@ -1169,15 +1216,15 @@ namespace Andro2UWP
 
                 //AddLogEntry("starting comparing, e.PackageName='" + e.PackageName + "', sTitle='" + sTitle + "'");
 
-            // e.g. 
-            //Text: Tap for details on battery and data usage
-            //Title: OneDrive is using battery
+                // e.g. 
+                //Text: Tap for details on battery and data usage
+                //Title: OneDrive is using battery
 
-            //Sender: com.android.vending
-            //Date: 26 - 02 - 2020 08:05
-            //Category: status
-            //BigText: 34 updates total are pending
-            //Title: 5 new updates
+                //Sender: com.android.vending
+                //Date: 26 - 02 - 2020 08:05
+                //Category: status
+                //BigText: 34 updates total are pending
+                //Title: 5 new updates
 
                 //if (e.PackageName == "android" && sTitle.Contains(" is using battery") ||
                 //    e.PackageName == "com.android.vending" && sTitle.Contains(" new updates") )
@@ -1216,7 +1263,7 @@ namespace Andro2UWP
                 AddLogEntry("Andro2UWP:App:OnInterrupt called!!!!!", true);
             }
 
-            protected override void OnServiceConnected() 
+            protected override void OnServiceConnected()
             {
                 AddLogEntry("Andro2UWP:App:OnServiceConnected called", true);
                 base.OnServiceConnected();
@@ -1240,7 +1287,7 @@ namespace Andro2UWP
             }
         }
 
-#endregion
+        #endregion
 
 #endif // if _ANDROID_
 

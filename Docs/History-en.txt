@@ -1,0 +1,96 @@
+History (Change logs)
+================
+
+MainPage changes
+-----------------
+
+2021.07.22
+* MainPage: List:Context: Copy( do Clip), Delete this and older
+* UWP: delete the clearlist button also with Deletethis
+ 
+2021.07.18
+* UWP.MainPage: clearlist button, was in XAML but was not supported (and was disabled), in Android it is in the Menu -
+ this is an important button when we receive on two UWP (e.g. on the phone and on the computer I check)
+* but also
+* UWP.OneDrive delete file list: when the file is not present, the function returns an error (not an Exception :) )
+* Andro: additionally adds event.Text ("floor" higher than event.Extras.*)
+
+2020.11.08
+* upgrade to Uno based on 3.1.6-will no longer correctly (unless) TextBlock on Android.10
+* transition to pkarmodule shared (including: ProgRing, ProgBar, WriteTextAsync)
+* adding two libraries because error
+ C:\Users\pkar\.NuGet\packages\ Xamarin.androidx.migration\1.0.0\buildTransitive
+\monoandroid90\Xamarin.Androidx.Migration.targets(131.9): error : 
+Could not find 2 Android X assemblies, make sure to install the following NuGet packages:
+...
+ C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error : Could not find 2 Android X assemblies, make sure to install the following NuGet packages:
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :  - Xamarin.AndroidX.Lifecycle.LiveData
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :  - Xamarin.AndroidX.Browser
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error : You can also copy-and-paste the following snippet into your .csproj file:
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.1.0" />
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :     <PackageReference Include="Xamarin.AndroidX.Browser" Version="1.0.0" />
+ pozniej jeszcze:
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.7.1\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :     <PackageReference Include="Xamarin.AndroidX.AppCompat.AppCompatResources" Version="1.2.0.3" />
+* komentuję pozostałości po Timerze (Uno001)
+* AddLog z try/catch, bo może na nim wylatywało z błędem?
+
+
+* I don't know why it shows "no date" when opening, without the refresh button-but trying to protect against this message not with the button
+* to the new logo info along with "!App.GB "catch" only when fulldebug (and normally non-log does not swell when disabled)
+
+
+2020.03.06: (win) after deleting older, does a refresh taking into account the sequence (asc/desc)
+
+ STORE v2002. 2002.03.02, Andro/Win
+
+
+// pkModuleShared
+// Both for UWP and Android
+// 2022
+
+
+ pkarModuleShared changes
+----------------------------
+//../../../_mojeSuby/pkarModule-Uno3-1-6.cs
+
+// (...)
+// AddHandler rootFrame.NavigationFailed, AddressOf OnNavigationFailed
+// 
+// ' PKAR added wedle https://stackoverflow.com/questions/39262926/uwp-hardware-back-press-work-correctly-in-mobile-but-error-with-pc
+// AddHandler rootFrame.Navigated, AddressOf OnNavigatedAddBackButton
+// AddHandler Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested, AddressOf OnBackButtonPressed
+// (...)
+
+### I already assume the correct Uno my own, without a functional reset
+
+2019.10.25
+* Clipboard for UWP goes as before, for UWP - no NuGet(so you don't have to add Reference as app is UWP only)
+* new feature: DialogBoxInput(uncommented)
+* new function: SetSettingsInt(double) - with conversion(because C # does not convert itself)
+  
+2019.09.10
+ * new function: GetPlatform(android, uwp, ios, wasm, other) - also as bool, int, string
+
+
+2019.09.03
+ * added MakeToast(thanks to Nuget)
+ * ..thanks to which I added CrashMessageAdd
+ * I added CrashMessageExit
+
+
+2019.08.31
+ * turned on full code analysis, and added:
+    * .ConfigureAwait(true)[ie default, you could disable this warning]
+    * ToString and int.Parse(and similar): cultureinvariant, or currentculture
+    * some null tests
+
+ 2019.08.27
+* new function: string GetAppVers() - works theoretically for UWP, Android and iOS
+* remake ClipBoard to universal version(requires Nuget)
+* IsMobile: UWP so far, macOS always NO, rest(Android, iOS, WASM) always YES
+* changing the method of obtaining a computer name(maybe universal)
+
+2019.08.26
+* migration to VC
+* comment on what is not crossplatform(upload it to pkarmodule.cs in UWP)
+
