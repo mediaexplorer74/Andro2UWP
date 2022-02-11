@@ -53,7 +53,7 @@ It doesn't use any other data, and only data it send (to same OneDrive folder) a
 sender names and notification filters, both created by you.
 
 ## Requirenments
-- Win SDK : 14xxx
+- Win SDK (min os build): 15063
 - Targets: ARM; x86; x64
 
 ## My "Workbench" 
