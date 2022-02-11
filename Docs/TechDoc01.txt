@@ -1,0 +1,16 @@
+Andro2UWP - Common info
+=========
+
+Android app
+This app takes your Android notifications, and some of them (filtered using rules you set) 
+send to your OneDrive (folder: Apps/Andro2UWP). You can view it either as simple text files 
+(from any browser, from any device) or using UWP companion app.
+It doesn't use any other data, and it doesn't send anything else anywhere else.
+
+
+
+UWP app
+This app reads files from your OneDrive (folder: Apps/Andro2UWP), treating it as Android notification sent by Android companion app.
+It doesn't use any other data, and only data it send (to same OneDrive folder) are dictionary of renames of notification 
+sender names and notification filters, both created by you.
+

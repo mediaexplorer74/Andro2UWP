@@ -1,0 +1,205 @@
+Andro2UWP - Windows Part 
+========================
+
+
+App name: Andro2UWP
+‪Authhor/Publisher: PKar‬
+Marketplace: https://www.microsoft.com/ru-ru/p/andro2uwp/9n9jl02ndn4p?activetab=pivot:overviewtab
+
+Little intro 
+------------
+This app is an UWP side of Android app with same name. Together, they are convenient way to read (on Windows device) notifications from apps on your Android device. It is somehow similar to "Your phone" application from Microsoft, but also have some differences:
+1. UWP app can be used on any Windows device (e.g. Lumia phone)
+2. Notifications from more than one Android device could be send to Windows device ...
+3. ... or devices, as notification from Android devices can be read on many Windows devices.
+4. Android app can be installed also on tablets and from Android Go edition (Your phone cannot be installed on such devices)
+5. You can add filters (so not every notification is sent to Windows)
+
+But, there is no ability (yet?) to respond to notification via Windows device.
+
+App creates log file (for debug purposes - if you encounter some problems, you can send me this log) locally, but all other files stores on OneDrive (Apps/Andro2UWP folder). These files are:
+* notifications (or, in UWP parlance, toasts) - files *.toast.txt, created by Android app;
+* sender.renames.txt, created by UWP app;
+* toasts.filters.txt, created by UWP app;
+
+Format of sender.renames.txt:
+original.sender.name|renamed.sender
+
+E.g.:
+com.whatsapp|WhatsApp
+com.bigajwcislo.ostrzegator|o!strzegator
+
+
+Format of toast.filters.txt:
+sender|title|text
+you can prefix (or sufix) text/title with '*' (mask character).
+
+E.g.:
+com.microsoft.skydrive|Preparing...|
+android|* is using battery|
+com.google.android.music|Downloading…|
+com.whatsapp||WhatsApp Web is currently active
+
+
+About Andro2UWP
+===============
+This app is an UWP side of Android app with same name. Together, they are convenient way to read (on Windows device) notifications from apps on your Android device. It is somehow similar to "Your phone" application from Microsoft, but also have some differences:
+1. UWP app can be used on any Windows device (e.g. Lumia phone)
+2. Notifications from more than one Android device could be send to Windows device ...
+3. ... or devices, as notification from Android devices can be read on many Windows devices.
+4. Android app can be installed also on tablets and from Android Go edition (Your phone cannot be installed on such devices)
+5. You can add filters (so not every notification is sent to Windows)
+
+But, there is no ability (yet?) to respond to notification via Windows device.
+
+App creates log file (for debug purposes - if you encounter some problems, you can send me this log) locally, but all other files stores on OneDrive (Apps/Andro2UWP folder). These files are:
+* notifications (or, in UWP parlance, toasts) - files *.toast.txt, created by Android app;
+* sender.renames.txt, created by UWP app;
+* toasts.filters.txt, created by UWP app;
+
+Format of sender.renames.txt:
+original.sender.name|renamed.sender
+
+E.g.:
+com.whatsapp|WhatsApp
+com.bigajwcislo.ostrzegator|o!strzegator
+
+
+Format of toast.filters.txt:
+sender|title|text
+you can prefix (or sufix) text/title with '*' (mask character).
+
+E.g.:
+com.microsoft.skydrive|Preparing...|
+android|* is using battery|
+com.google.android.music|Downloading…|
+com.whatsapp||WhatsApp Web is currently active
+
+System req.:
+Mix. os build 15063
+
+Supported deviced:
+ HoloLens  PC  Mobile  Surface Hub
+
+
+Description
+-----------
+
+This app is an UWP side of Android app with same name. Together, they are convenient way to read (on Windows device) notifications from apps on your Android device. It is somehow similar to "Your phone" application from Microsoft, but also have some differences:
+1. UWP app can be used on any Windows device (e.g. Lumia phone)
+2. Notifications from more than one Android device could be send to Windows device ...
+3. ... or devices, as notification from Android devices can be read on many Windows devices.
+4. Android app can be installed also on tablets and from Android Go edition (Your phone cannot be installed on such devices)
+5. You can add filters (so not every notification is sent to Windows)
+
+But, there is no ability (yet?) to respond to notification via Windows device.
+
+App creates log file (for debug purposes - if you encounter some problems, you can send me this log) locally, but all other files stores on OneDrive (Apps/Andro2UWP folder). These files are:
+* notifications (or, in UWP parlance, toasts) - files *.toast.txt, created by Android app;
+* sender.renames.txt, created by UWP app;
+* toasts.filters.txt, created by UWP app;
+
+Format of sender.renames.txt:
+original.sender.name|renamed.sender
+
+E.g.:
+com.whatsapp|WhatsApp
+com.bigajwcislo.ostrzegator|o!strzegator
+
+
+Format of toast.filters.txt:
+sender|title|text
+you can prefix (or sufix) text/title with '*' (mask character).
+
+E.g.:
+com.microsoft.skydrive|Preparing...|
+android|* is using battery|
+com.google.android.music|Downloading…|
+com.whatsapp||WhatsApp Web is currently active
+
+Развернуть
+Снимки экрана
+1 [Main page of app] 
+2 [Settings page] 
+3 [Log viewer]
+
+Дополнительные сведения
+Издатель:
+PKar
+
+Дата выпуска
+04.03.2020
+
+Приблизительный размер
+19,76 МБ
+
+Возрастной рейтинг
+Для всех возрастов
+
+Категория
+Производительность
+
+
+http://beskid.geo.uj.edu.pl/p/ms/andro2uwp-privacy.htm
+
+
+http://beskid.geo.uj.edu.pl/p/ms/
+
+Pkar apps / Moje aplikacje
+This is complete list of apps I created for myself and published
+
+all apps are without any ads
+none of apps send any info about you to network
+primary version of apps are UWP (Windows), mainly in VB (as I have Windows desktop and Windows phone)
+multiplatform apps are created as Platform Uno port of UWP app (with my additions to Uno)
+any limits in functionality are caused by incomplete coverage of Platform Uno, or platform limitation (e.g. iOS doesn't allow access SMS messages)
+since 2019, apps version number is constructed from two digits year and two digits of month (so 2005 means May 2020)
+Poniżej jest zamieszczona kompletna lista aplikacji które napisałem na własne potrzeby, i są na tyle dopracowane że zdecydowałem się na ich publikację
+
+moje aplikacje nie pokazują żadnych reklam
+żadna z nich nie wysyła żadnych danych osobowych
+podstawowa (pierwotna) wersja aplikacji jest na UWP (Windows), głównie w VB - taki mam komputer i telefon
+wieloplatformowość jest osiągnięta poprzez skompilowanie app w Platform Uno (plus moje rozszerzenia do Uno)
+ewentualne ograniczenia funkcjonalności spowodowane są brakami w Uno, lub ograniczeniai platformy (np. iOS nie pozwala odczytać listy SMS)
+od roku 2019, numer wersji aplikacji stworzony jest z połączenia dwu cyfr roku i dwu cyfr miesiąca (czyli 2005 oznacza maj 2020)
+app	current
+version	Windows	Android	iOS	online	privacy
+policy	user
+guide	ograniczenia platform / platforms' limits
+en	pl	Amazon	Google	Huawei	APK	 
+AccuMon	1.2103.4	en	 	 	 	 	 	 	 	privacy	 
+Acer DLP Remote	1.1.0	en	pl	 	 	 	 	 	 	 	 
+AirBox603	10.2102.15	en	en	 	 	 	 	 	 	 	 
+Andro2UWP	 2002	en	pl	link	link	 	 	 	 	privacy	 
+Anniversaries	10.1910.3	en	pl	link	link	 	 	 	 test	privacy	 
+Autism test	 	en	pl		 	 	 	 	 	 	 
+BackupSMS	10.2010.2	en	pl	 	 	 	 	  --	 	privacy	 	iOS doesn't allow access to SMS / iOS nie pozwala na dostęp do SMS
+Barcode Like	1.2104.4	en	pl	 	 	 	 	 	 	privacy	 
+Calls' stat	 2006	en	pl	link	 	 	 	  --	 	privacy	 	iOS doesn't allow access to list of calls / iOS nie pozwala na dostęp do listy rozmów.
+Exporting call log as text file only on Windows / Eksport do pliku tekstowego tylko pod Windows
+Daily itinerary	 	 		 	 	 	 	 	 	 	 
+Dynamizm charakteru	10.1910.5	en	pl	link	link	 	 	 	 test	privacy	 	UWP only: characters comparing, prognosis for relation
+porównywanie charakterów dwu osób; prognoza losów relacji
+FilteredRSS	4.2004.1	en	pl	 	 	 	 	 	 	 	 
+HejBand	1.1.2	en	pl	 	 	 	 	 	 	privacy	 
+KrakTram	10.2001.2	en	pl	link	link	 	 	 	 test	privacy	guide	UWP only: map; contextmenu for sort etc., route, details; tram network history
+mapa, menu kontekstowe do sortowania etc., trasa, szczegóły odjazdu, historia sieci
+LycaIle	  2001	 	pl	 	 	 	 	 	 	privacy	 	Nie będzie nowszej wersji, bo przeszedłem do Virgin Mobile
+Medium Calendar Tile	2.2.0	en	pl		 	 	 	 	 	privacy	 
+MijiaThermo	1.2102.2	en	pl		 	 	 	 	 	 	 
+My Cameras	 	 	 		 	 	 	 	 	 	 
+Null Tile	2.1909.1	en	pl	 	 	 	 	 	 	privacy	 
+PCMak	1.1.1	en	pl	 	 	 	 	 	 	 	 
+PrzypomnijTu	 	 	 		 	 	 	 	 	 	 
+Real sundial	2.1907.0	en	pl	 	 	 	 	 	 	privacy	 
+RGB bulb	2.2001.5	en	pl	 	 	 	 	 	 	 	 
+SmogMeter	10.2102.3	en	pl	link	link	 	 	 	 	privacy	guide	UWP only: map, live tiles, contextmenu, remoteSystem
+mapka, aktywne ikonki, menu kontekstowe, łączność z innymi app
+StereoViewer	1.1.3	en	pl	 	 	 	 	 	 	privacy	guide
+TakeAPill	1.1906.19	en	pl	 	 	 	 	 	 	privacy	 
+UWP Magnifying Glass	3.1.1	en	pl	 	 	 	 	 	 	privacy	 
+UWP Shopping List	1.3.1	en	pl	 	 	 	 	 	 	 	 
+VirginMob.ile	  2001	 	pl	 	 	 	 	 	 	privacy 	 
+WeedQb Socket	1.0.11	en	pl		 	 	 	 	 	privacy	 
+Weighing Scale	10.2101.1	en	pl		 	 	 	 	 	privacy	 
+Wycofania	 	 	pl		 	 	 	 	 	 	 

@@ -1,0 +1,34 @@
+Andro2UWP - Android Part 
+========================
+
+This app sends notifications from apps from your Android device to Windows device. It is somehow similar to "Your phone" application from Microsoft, but also have some differences:
+1. It can send notification also from tablets and from Android Go edition (Your phone cannot be installed on such devices)
+2. You can add filters (so not every notification is sent to Windows)
+3. Notification are sent to your OneDrive, and can be read on any device (companion app is for any UWP device, e.g. Lumia phone; but it can be read even without any app from any device with WWW browser connected to Internet )
+4. Notifications from more than one Android device could be send to Windows device
+5. And notification from Android devices can be read on many Windows devices.
+
+But, there is no ability (yet?) to respond to notification via Windows device.
+
+App creates log file (for debug purposes - if you encounter some problems, you can send me this log) locally, but all other files stores on OneDrive (Apps/Andro2UWP folder). These files are:
+* notifications (or, in UWP parlance, toasts) - files *.toast.txt, created by Android app;
+* sender.renames.txt, created by UWP companion app;
+* toasts.filters.txt, created by UWP companion app;
+
+Format of sender.renames.txt:
+original.sender.name|renamed.sender
+
+E.g.:
+com.whatsapp|WhatsApp
+com.bigajwcislo.ostrzegator|o!strzegator
+
+
+Format of toast.filters.txt:
+sender|title|text
+you can prefix (or sufix) text/title with '*' (mask character).
+
+E.g.:
+com.microsoft.skydrive|Preparing...|
+android|* is using battery|
+com.google.android.music|Downloading…|
+com.whatsapp||WhatsApp Web is currently active

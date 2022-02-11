@@ -1,0 +1,72 @@
+Idea
+====
+
+Description / Discussion
+---------------
+
+
+https://forum.xda-developers.com/t/new-solution-for-whatsapp-telegram-bridge.4211421/
+
+New solution for whatsapp-telegram-bridge-
+ Thread starterdAV84  Start dateJan 1, 2021
+
+dAV84
+Senior Member
+Jan 1, 2021 at 1:18 PM
+#1
+hello
+i decided use all 2021 my windows phone HP X3 elite all year 2021
+the only problem for me and work it's the f**k whatt's up and here a simple solution
+
+If any knows how cook this in a simple solution for initialize by windows, i'm ready for paid
+
+ibcomputing.com
+Setting up WhatsApp Telegram Bridge Using Matterbridge 2020 - IB Computing
+bridge whatsapp and telegram groups using matterbridge. you can rely messages from whatsapp to telegram and vise versa. full tutorial.
+ibcomputing.com ibcomputing.com
+augustinionut
+Senior Member
+Jan 1, 2021 at 2:48 PM
+#2
+20 bucks to use whatsapp? Buhahahaha
+dAV84
+Senior Member
+Jan 1, 2021 at 5:26 PM
+#3
+it's free solution
+augustinionut
+Senior Member
+Jan 1, 2021 at 9:01 PM
+#4
+Yes, i just laugh about that server option.
+
+augustinionut
+Senior Member
+Jan 1, 2021 at 9:02 PM
+#5
+Anyway, windows tutorial?
+dAV84
+Senior Member
+Jan 3, 2021 at 8:37 AM
+#6
+I tested the solution in w10 and txt file, but's nothing to me
+
+people contact in project....
+
+Telegram : http://t.me/ibcomputing : http://t.me/ib_computing mastadon : https://aana.site/@mujeebcpy lbry.tv : https://lbry.tv/@ibcomputing:1 Facebook : http://facebook.com/ibcomputing/ Twitter : https://twitter.com/ib_computing instagram : https://www.instagram.com/mujeebcpy/
+
+github.com
+rmed - Overview
+rmed has 63 repositories available. Follow their code on GitHub.
+github.com
+augustinionut
+Senior Member
+Jan 3, 2021 at 10:50 AM
+#7
+How about to rewrite andro2uwp?
+
+dAV84
+Senior Member
+Jan 4, 2021 at 6:59 PM
+#8
+the best is interopp from whatssup to telegram, viber or other in wph, so simple to say more diffiicult to make.

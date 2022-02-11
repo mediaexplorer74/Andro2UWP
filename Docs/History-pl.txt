@@ -1,0 +1,44 @@
+/*
+
+2021.07.22
+* MainPage:List:Context: Copy (do Clip), Delete this and older
+* UWP: kasowanie guziczka clearlist takze przy Deletethis
+ 
+2021.07.18
+* UWP.MainPage:guzik ClearList, był w XAML, ale nie był obsługiwany (i był wygaszony), w Android jest w Menu -
+   jest to ważny guzik wtedy, gdy mamy odbieranie na dwu UWP (np. na telefonie i w komputerze sprawdzam)
+* ale także
+* UWP.OneDrive usuwanie listy plików: gdy pliku nie ma, funkcja zwraca błąd (a nie Exception :) )
+* ANDRO: dodatkowo dodaje Event.Tekst ("piętro" wyżej niż Event.Extras.*)
+
+2020.11.08
+* przejście na Uno based on 3.1.6 - będzie już poprawnie (chyba) TextBlock na Android.10
+* przejście na pkarmodule shared (w tym: ProgRing, ProgBar, WriteTextAsync)
+* dodaję dwie library, bo error
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error : Could not find 2 Android X assemblies, make sure to install the following NuGet packages:
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :  - Xamarin.AndroidX.Lifecycle.LiveData
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :  - Xamarin.AndroidX.Browser
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error : You can also copy-and-paste the following snippet into your .csproj file:
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.1.0" />
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.0\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :     <PackageReference Include="Xamarin.AndroidX.Browser" Version="1.0.0" />
+ pozniej jeszcze:
+        C:\Users\pkar\.nuget\packages\xamarin.androidx.migration\1.0.7.1\buildTransitive\monoandroid90\Xamarin.AndroidX.Migration.targets(131,9): error :     <PackageReference Include="Xamarin.AndroidX.AppCompat.AppCompatResources" Version="1.2.0.3" />
+* komentuję pozostałości po Timerze (Uno001)
+* AddLog z try/catch, bo może na nim wylatywało z błędem?
+
+2020.09.25
+* rekompilacja z nowszym Uno, bo Gogus wymaga SDK 10 - a jego obsluga jest tylko w nowszym Uno. Było dev945.
+
+2020.06.21
+* progressring wczytywania logu, i async Page_Load (o ile mu sie uda pokazac)
+* przechwycenie bledu wysylania logu (gdy za duzy?)
+* nie wiem czemu pokazuje "no data" przy otwieraniu, bez guzika refresh - ale proba zabezpieczenia przed tym komunikatem nie z guzika
+* do logu info o nowym wraz z "!App.gbPrzechwytuj" tylko przy fulldebug (a normalnie nie - log nie puchnie przy wylaczonym)
+
+
+2020.03.06: (win) po kasowaniu older, robi refresh z uwzglednieniem kolejnosci (asc/desc)
+
+    STORE v2002. 2002.03.02, Andro/Win
+
+  
+  */
