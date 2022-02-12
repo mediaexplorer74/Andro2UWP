@@ -636,8 +636,8 @@ namespace Andro2UWP
         // uiRefreshList_Click
         private async void uiRefreshList_Click(object sender, RoutedEventArgs e)
         {
-            // obsolete button
-            //uiRefreshList.IsEnabled = false;
+            // Refresh button
+            uiRefresh.IsEnabled = false;
 
             if (p.k.GetPlatform("uwp"))
             {
@@ -652,8 +652,8 @@ namespace Andro2UWP
                 //await App.WczytajNowe();
             }
 
-            // obsolete button
-            //uiRefreshList.IsEnabled = true;
+            // Refresh button
+            uiRefresh.IsEnabled = true;
 
             //if (sender != null)   // there is no call other than from event button, so always sender < > null?
             //{
@@ -756,7 +756,7 @@ namespace Andro2UWP
                     new Windows.ApplicationModel.Background.SystemCondition
                     (Windows.ApplicationModel.Background.SystemConditionType.InternetAvailable);
 
-                p.k.RegisterTimerTrigger("Andro2UWP_Timer", 15, false, oCondition);
+                p.k.RegisterTimerTrigger("Andro2UWP_Timer", 15, false, oCondition); // 15 - 15 minutes
             }
             else
             {

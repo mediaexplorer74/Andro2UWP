@@ -230,17 +230,24 @@ namespace p
 
             return false;
         }
+        
+        
+        // TODO : REDO IT!! Bad timer
 
         public static Windows.ApplicationModel.Background.BackgroundTaskRegistration RegisterTimerTrigger(string sName, uint iMinutes, bool bOneShot = false, Windows.ApplicationModel.Background.SystemCondition oCondition = null)
         {
             try
             {
-                var builder = new Windows.ApplicationModel.Background.BackgroundTaskBuilder();
+                Windows.ApplicationModel.Background.BackgroundTaskBuilder builder = new Windows.ApplicationModel.Background.BackgroundTaskBuilder();
 
                 builder.SetTrigger(new Windows.ApplicationModel.Background.TimeTrigger(iMinutes, bOneShot));
+                
                 builder.Name = sName;
+
                 if (oCondition is object) builder.AddCondition(oCondition);
+                
                 var oRet = builder.Register();
+                
                 return oRet;
             }
             catch

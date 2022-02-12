@@ -111,7 +111,7 @@
     </Grid>
     <Page.BottomAppBar>
         <win:CommandBar>
-            <AppBarButton Icon="Refresh" x:Uid="uiRefresh" Label="Refresh list" Click="uiRefreshList_Click"/>
+            <AppBarButton Icon="Refresh" x:Uid="uiRefresh" Name="uiRefresh" Label="Refresh list" Click="uiRefreshList_Click"/>
             
             <AppBarToggleButton Icon="Clock" x:Uid="uiAutoRefresh" Name="uiAutoRefresh" Label="Auto refresh" Click="uiAutoRefresh_Click" />
             
