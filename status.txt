@@ -1,4 +1,3 @@
-v1.0.11-alpha
+v1.0.12-alpha
 
-Merging Goolge and UWP branches' one drive mechanisms - ready
-RU Localization - added (and symply tested, not ready yet)
+Work in progress

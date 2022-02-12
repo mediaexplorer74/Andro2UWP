@@ -4,15 +4,16 @@
 
 My attempt to recover PKar70's Andro2UWP project, branch 10.2002.5
 
-Technical version (build) 1.0.11.0
+Technical version (build) 1.0.12.0
 
 Status: alpha (RnD)
 
 ## Progress 
-- Merging Goolge and UWP branches' one drive mechanisms - ready
-- RU Localization - added (and symply tested, not ready yet)
+- Transferring/porting OneDriveDroid and OneDriveUWP to OneDrive UNO in progress
+- RU Localization added (and symply tested, not ready yet...)
 - Android version improved (Sync Engine recovered a partially, zero-size files generated, heh)
-- UWP version demaged after choosing ARM building... so strange  :(
+- Mobile UWP version recovered a little (but many bugs still exist!)
+- Real toast notifications constructed only at/in draft... 
 
 
 ## Idea (Goal)
@@ -53,7 +54,7 @@ It doesn't use any other data, and only data it send (to same OneDrive folder) a
 sender names and notification filters, both created by you.
 
 ## Requirenments
-- Win SDK (min os build): 15063
+- Win SDK : 14xxx
 - Targets: ARM; x86; x64
 
 ## My "Workbench" 
@@ -65,11 +66,6 @@ Used Workloads:
 - UNO Platform extesion
 
 
-## Refactoring tips:
-- UWP/Android/Shared nodes are slitly fixed...
-- Onedrive SDK for UWP is ok, but Onedrive SDK for Android is not stable yet...
-- Real toast notifications constructed only at/in draft... 
-
 # Contribute!
 There's still a TON of things missing from this proof-of-concept (MVP) and areas of improvement 
 which I just haven't had the time to get to yet.
@@ -77,9 +73,8 @@ which I just haven't had the time to get to yet.
 - Additional Language Packages
 - Media Transferring Support: screenshots, etc. (for the brave)
 
-## Solution Layout
-Projects have a DOCs which expands on the internal functionality and layout of that project... it's good for your own R.E. 
-There are no DOCs which explains all architecture, API, OneDride auth. and etc. yet... this is just beginning... =)
+
+
 
 With best wishes,
 

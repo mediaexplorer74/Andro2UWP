@@ -28,21 +28,21 @@ namespace Andro2UWP
         }
 
         // Set these values to your app's ID and return URL.
-        private readonly string oneDriveForBusinessClientId = "Insert your OneDrive for Business client id";
-        private readonly string oneDriveForBusinessReturnUrl = "http://localhost:8080";
-        private readonly string oneDriveForBusinessBaseUrl = "https://graph.microsoft.com/";
+        //private readonly string oneDriveForBusinessClientId = "Insert your OneDrive for Business client id";
+        //private readonly string oneDriveForBusinessReturnUrl = "http://localhost:8080";
+        //private readonly string oneDriveForBusinessBaseUrl = "https://graph.microsoft.com/";
 
-        private readonly string oneDriveConsumerClientId = "560b76b6-f929-4200-b8b0-70892f08f94a";//"Insert your OneDrive Consumer client id";
-        private readonly string oneDriveConsumerReturnUrl = "msal560b76b6-f929-4200-b8b0-70892f08f94a://auth";//"https://login.live.com/oauth20_desktop.srf";
-        private readonly string oneDriveConsumerBaseUrl = "https://api.onedrive.com/v1.0";
+        //private readonly string oneDriveConsumerClientId = "560b76b6-f929-4200-b8b0-70892f08f94a";//"Insert your OneDrive Consumer client id";
+        //private readonly string oneDriveConsumerReturnUrl = "msal560b76b6-f929-4200-b8b0-70892f08f94a://auth";//"https://login.live.com/oauth20_desktop.srf";
+        //private readonly string oneDriveConsumerBaseUrl = "https://api.onedrive.com/v1.0";
 
-        private readonly string[] scopes = new string[]
-        {
-            "onedrive.readonly", // ok! //"onedrive.readwrite", //RnD
-            "onedrive.appfolder", // ok
-            "wl.signin",
-            "offline_access"
-        };
+        //private readonly string[] scopes = new string[]
+        //{
+        //    "onedrive.readonly", // ok! //"onedrive.readwrite", //RnD
+        //    "onedrive.appfolder", // ok
+        //    "wl.signin",
+        //    "offline_access"
+        //};
 
         public AccountSelectionPage()
         {
@@ -156,10 +156,10 @@ namespace Andro2UWP
 #if !__ANDROID__
                     var msaAuthProvider = new MsaAuthenticationProvider
                     (
-                        this.oneDriveConsumerClientId,
-                        this.oneDriveConsumerReturnUrl,
-                        this.scopes,
-                        new CredentialVault(this.oneDriveConsumerClientId)
+                        App.oneDriveConsumerClientId, // this.
+                        App.oneDriveConsumerReturnUrl, // this.
+                        App.scopes, // this.
+                        new CredentialVault(App.oneDriveConsumerClientId) // this.
                     );
 #else
                     Android.Content.Context ctxt = Android.App.Application.Context;
@@ -178,7 +178,7 @@ namespace Andro2UWP
 
                     authTask = msaAuthProvider.RestoreMostRecentFromCacheOrAuthenticateUserAsync();
 
-                    app.uOneDriveClient = new OneDriveClient(this.oneDriveConsumerBaseUrl, msaAuthProvider);
+                    app.uOneDriveClient = new OneDriveClient(App.oneDriveConsumerBaseUrl, msaAuthProvider);
 
                     app.AuthProvider = msaAuthProvider; // !
                 }

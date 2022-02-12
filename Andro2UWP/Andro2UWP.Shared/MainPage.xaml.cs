@@ -69,30 +69,31 @@ namespace Andro2UWP
 
             // for UWP we do not refresh - it takes a long time
             // RnD: UWP refresh when app started (Main page loaded)
-            if (1 == 1) //(p.k.GetPlatform("android"))
+            if  (p.k.GetPlatform("android")) // (1 == 0)
             {
 
-                if (p.k.GetPlatform("uwp"))
+                //if (p.k.GetPlatform("uwp"))
+                //{
+                if (!await App.LoadNews(true))
                 {
-                    if (!await App.LoadNews(true))
-                    {
-                        return;
-                    }
+                    return;
+                }
 
                     //if (!await App.initODandDict())
                     //    return;     // first of all-reading the dictionaries anew (so as not to reset the dictionary!)
 
                     //await App.WczytajNowe();
-                }
+                //}
 
 
                 RefreshListView(false);
-
             }
 
 #if NETFX_CORE
+
+            //RnD
             // this is in BottomBar, which is not present outside UWP, so you can not refer to it :)
-            if (!p.k.IsFamilyDesktop())
+            if (p.k.GetPlatform("android")) //(!p.k.IsFamilyDesktop())
             {
                 // besides the desktop does not make sense, because the OS
                 // and so turned off on timeout
@@ -743,11 +744,14 @@ namespace Andro2UWP
             if(!uiAutoRefresh.IsChecked.HasValue) return;
             if(uiAutoRefresh.IsChecked.Value)
             {
-                if(!p.k.IsFamilyDesktop())
-                {
-                    p.k.DialogBox("Sorry, but this would work only on desktop");    // bez .resw, bo i tak to powinno być zablokowane
-                    return;
-                }
+                // RnD
+                //if(!p.k.IsFamilyDesktop())
+                //{
+                //    bez .resw, bo i tak to powinno być zablokowane...
+                //    p.k.DialogBox("Sorry, but this would work only on desktop.");    
+                //    return;
+                //}
+
                 Windows.ApplicationModel.Background.SystemCondition oCondition =
                     new Windows.ApplicationModel.Background.SystemCondition
                     (Windows.ApplicationModel.Background.SystemConditionType.InternetAvailable);

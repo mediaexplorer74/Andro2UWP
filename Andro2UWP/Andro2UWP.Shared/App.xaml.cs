@@ -54,11 +54,17 @@ namespace Andro2UWP
 
         public IAuthenticationProvider AuthProvider { get; set; }
 
-        public readonly static string GoneDriveConsumerClientId = "560b76b6-f929-4200-b8b0-70892f08f94a";//"Insert your OneDrive Consumer client id";
-        public readonly static string GoneDriveConsumerReturnUrl = "msal560b76b6-f929-4200-b8b0-70892f08f94a://auth";//"https://login.live.com/oauth20_desktop.srf";
-        public readonly static string GoneDriveConsumerBaseUrl = "https://api.onedrive.com/v1.0";
+        public readonly static string oneDriveConsumerClientId = "560b76b6-f929-4200-b8b0-70892f08f94a";//"Insert your OneDrive Consumer client id";
+                                                                                                        //public readonly static string oneDriveConsumerClientId = "a643bcca-2548-4793-aa1c-826a430680f4";
 
-        private readonly string[] Gscopes = new string[]
+
+        public readonly static string oneDriveConsumerReturnUrl = "msal560b76b6-f929-4200-b8b0-70892f08f94a://auth";//"https://login.live.com/oauth20_desktop.srf";
+        //public readonly static string oneDriveConsumerReturnUrl = "msala643bcca-2548-4793-aa1c-826a430680f4://auth";
+        
+
+        public readonly static string oneDriveConsumerBaseUrl = "https://api.onedrive.com/v1.0";
+
+        public readonly static string[] scopes = new string[]
         {
            "onedrive.readonly", // ok! //"onedrive.readwrite", //RnD
             "onedrive.appfolder", // ok
@@ -197,10 +203,10 @@ namespace Andro2UWP
                 MsaAuthenticationProvider msaAuthProvider = 
                 new MsaAuthenticationProvider
                 (
-                    GoneDriveConsumerClientId, // this.
-                    GoneDriveConsumerReturnUrl, // this.
-                    Gscopes, // this.
-                    new CredentialVault(GoneDriveConsumerClientId) //this.
+                    oneDriveConsumerClientId, 
+                    oneDriveConsumerReturnUrl, 
+                    scopes, 
+                    new CredentialVault(oneDriveConsumerClientId) 
                 );
 #else
 
@@ -218,33 +224,28 @@ namespace Andro2UWP
 
                 authTask = msaAuthProvider.RestoreMostRecentFromCacheOrAuthenticateUserAsync();
 
-                // RnD
-                // = null;
+               
                 app.uOneDriveClient =
                     new OneDriveClient
                     (
-                        GoneDriveConsumerBaseUrl, //this.GoneDriveConsumerBaseUrl, 
+                        oneDriveConsumerBaseUrl, 
                         msaAuthProvider
                     );
 
-                app.AuthProvider = msaAuthProvider; // !
-
+                app.AuthProvider = msaAuthProvider; 
 
                 try
                 {
                     await authTask;
 
+                    // RnD : error hadling
                     //app.NavigationStack.Add(new ItemModel(new Item()));
-
                     //this.Frame.Navigate(typeof(MainPage), e);
 
                 }
                 catch (Exception ex) //catch (ServiceException exception)
                 {
-                    // Swallow the auth exception but write message for debugging.
-                    //Debug.WriteLine(exception.Error.Message);
-
-                    //RnD
+                    
                     Debug.WriteLine("AccountSelection - InitializeClient - exception: " + ex.Message);
 
                     // TODO : error hadling
@@ -435,8 +436,6 @@ namespace Andro2UWP
             string[] scopes = { "Files.ReadWrite" };
             App.gOnedrive = new Uno.OneDrive.Connector
             (
-               //"287faaf5-69f4-46e7-977e-1980e19790d0"
-               //"560b76b6-f929-4200-b8b0-70892f08f94a"
                GoneDriveConsumerClientId,
                scopes
                );
