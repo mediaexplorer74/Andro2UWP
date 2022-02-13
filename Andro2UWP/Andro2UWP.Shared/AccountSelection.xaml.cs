@@ -167,10 +167,10 @@ namespace Andro2UWP
                     var msaAuthProvider = new MsaAuthenticationProvider
                     (
                         ctxt, // RnD
-                        this.oneDriveConsumerClientId,
-                        this.oneDriveConsumerReturnUrl,
-                        this.scopes,
-                        new CredentialVault(this.oneDriveConsumerClientId)
+                        App.oneDriveConsumerClientId,
+                        App.oneDriveConsumerReturnUrl,
+                        App.scopes,
+                        new CredentialVault(App.oneDriveConsumerClientId)
                     );
 #endif
 

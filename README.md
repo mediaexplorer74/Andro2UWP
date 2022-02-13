@@ -4,16 +4,17 @@
 
 My attempt to recover PKar70's Andro2UWP project, branch 10.2002.5
 
-Technical version (build) 1.0.12.0
+Technical version (build) 1.0.13.0
 
 Status: alpha (RnD)
 
 ## Progress 
 - Transferring/porting OneDriveDroid and OneDriveUWP to OneDrive UNO in progress
 - RU Localization added (and symply tested, not ready yet...)
-- Android version improved (Sync Engine recovered a partially, zero-size files generated, heh)
+- Android Sync Engine recovered  (but it needs add. testing)
 - Mobile UWP version recovered a little (but many bugs still exist!)
 - Real toast notifications constructed only at/in draft... 
+- 2 great problems detected: timer damaged and real toasts' code is not connected to anything.. 
 
 
 ## Idea (Goal)
@@ -30,7 +31,7 @@ Phases of "building the solution":
 
 [3] Tech. project +-
 
-[4] Dev >> [35%]
+[4] Dev >> [40%]
 
 [5] "Intro" -
 

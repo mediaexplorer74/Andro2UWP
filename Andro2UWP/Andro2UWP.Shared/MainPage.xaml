@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
             <!-- buttony, etc. -->
             <RowDefinition Height="*"/>
-            <!-- lista -->
+            <!-- filelist -->
             <RowDefinition Height="Auto"/>
             <!-- Android commandbar -->
         </Grid.RowDefinitions>
@@ -43,7 +43,7 @@
         <!-- jeszcze nie wiem co tu ma byc :) -->
 
 
-        <!-- wlasciwa lista -->
+        <!-- wlasciwa filelist -->
         <ListView x:Name="uiList" Margin="0,10,0,0" HorizontalContentAlignment="Stretch" Grid.Row="3" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

@@ -388,15 +388,15 @@ namespace Andro2UWP
             // we write...
             p.k.ProgRingShow(true);
 
-            string dictionaryFile = "";
+            string dictionaryFileContent = "";
             foreach (var entry in App.gdSenderRenames)
             {
-                dictionaryFile = dictionaryFile + entry.Key + "|" + entry.Value + "\n";
+                dictionaryFileContent = dictionaryFileContent + entry.Key + "|" + entry.Value + "\n";
             }
 
-// "UWP" ONLY (?) TODO: redo it for Android...
+            // "UWP" ONLY (?) TODO: redo it for Android...
 #if ((!__ANDROID__) && (!__WASM__))
-            await p.od.ReplaceOneDriveFileContent("Apps/Andro2UWP/sender.renames.txt", dictionaryFile);
+            await p.od.ReplaceOneDriveFileContent("Apps/Andro2UWP/sender.renames.txt", dictionaryFileContent);
 #endif
             RefreshListView(false);
 
@@ -405,30 +405,30 @@ namespace Andro2UWP
         }//uiRenameSource_Click end
 
 
-        // UsunPliki / Delete files
-        private async System.Threading.Tasks.Task UsunPliki(List<string> lista, bool bMsg)
+        // DeleteFiles
+        private async System.Threading.Tasks.Task DeleteFiles(List<string> filelist, bool bMsg)
         {
-            p.k.ProgRingShow(true, false, 0, lista.Count);
+            p.k.ProgRingShow(true, false, 0, filelist.Count);
 
 #if !__ANDROID__
-            await p.od.UsunPlikiOneDrive("Apps/Andro2UWP", lista);
+            await p.od.DeleteFilesFromOneDrive("Apps/Andro2UWP", filelist);
 
             for(int iLp = App.gToasty.Count-1; iLp>=0; iLp--)
             {
                 var toast = App.gToasty.ElementAt(iLp);
                 
-                if(lista.Contains(toast.sFileName))
+                if(filelist.Contains(toast.sFileName))
                 {
                     App.gToasty.RemoveAt(iLp);
                 }
             }
 
-            // i pokaz nową wersję listy
+            // show new version of filelist
             RefreshListView(bMsg);
 #endif 
             p.k.ProgRingShow(false);
 
-        }//UsunPliki
+        }//DeleteFiles
 
         // uiDeleteThis_Click
         private void uiDeleteThis_Click(object sender, RoutedEventArgs e)
@@ -438,12 +438,12 @@ namespace Andro2UWP
 
             // from list, oraz from OneDrive
 
-            List<string> lista = new List<string>();
+            List<string> filelist = new List<string>();
             
-            lista.Add(toast.sFileName);
+            filelist.Add(toast.sFileName);
             
             // delete files
-            UsunPliki(lista, false);
+            DeleteFiles(filelist, false);
 
         }//uiDeleteThis_Click end
 
@@ -466,18 +466,18 @@ namespace Andro2UWP
             }
 
             // from list, oraz from OneDrive
-            List<string> lista = new List<string>();
+            List<string> filelist = new List<string>();
 
             foreach(var item in App.gToasty)
             {
                 if (item.displayDate.CompareTo(toast.displayDate) < 0)
                 {
-                    lista.Add(item.sFileName);
+                    filelist.Add(item.sFileName);
                 }
             }
             
             // delete files
-            await UsunPliki(lista,false);
+            await DeleteFiles(filelist,false);
 
         }//uiDeleteOlder_Click end
 
@@ -496,15 +496,15 @@ namespace Andro2UWP
             }
 
             // from list, oraz from OneDrive
-            var lista = new List<string>();
+            var filelist = new List<string>();
             foreach (var item in App.gToasty)
             {
                 if (item.displayDate.CompareTo(toast.displayDate) <= 0)
-                    lista.Add(item.sFileName);
+                    filelist.Add(item.sFileName);
             }
             
             // delete files
-            await UsunPliki(lista,false);
+            await DeleteFiles(filelist,false);
 
         }//uiDeleteThisOlder_Click end
 
@@ -538,15 +538,15 @@ namespace Andro2UWP
             }
 
             // from list, oraz from OneDrive
-            List<string> lista = new List<string>();
+            List<string> filelist = new List<string>();
             foreach (var item in App.gToasty)
             {
                 if (item.displaySource == toast.displaySource)
-                    lista.Add(item.sFileName);
+                    filelist.Add(item.sFileName);
             }
 
             // delete files
-            await UsunPliki(lista,false);
+            await DeleteFiles(filelist,false);
 
         }//uiDeleteSender_Click end
 
@@ -614,15 +614,16 @@ namespace Andro2UWP
             p.k.ProgRingShow(true);
 
 
-            string dictionaryFile = "";
+            string dictionaryFileContent = "";
 
             foreach (var entry in App.glFiltry)
             {
-                dictionaryFile = dictionaryFile + entry.sPackageName + "|" + entry.sTitle + "|" + entry.sText + "\n";
+                dictionaryFileContent = dictionaryFileContent + entry.sPackageName 
+                    + "|" + entry.sTitle + "|" + entry.sText + "\n";
             }
 
 #if !__ANDROID__
-            await p.od.ReplaceOneDriveFileContent("Apps/Andro2UWP/toasts.filters.txt", dictionaryFile);
+            await p.od.ReplaceOneDriveFileContent("Apps/Andro2UWP/toasts.filters.txt", dictionaryFileContent);
 #endif
 
             // uiRefreshList_Click(null, null); // <-- it's not filtering right now anyway, so we're not playing this
@@ -637,7 +638,7 @@ namespace Andro2UWP
         private async void uiRefreshList_Click(object sender, RoutedEventArgs e)
         {
             // Refresh button
-            uiRefresh.IsEnabled = false;
+            //uiRefresh.IsEnabled = false;
 
             if (p.k.GetPlatform("uwp"))
             {
@@ -653,7 +654,7 @@ namespace Andro2UWP
             }
 
             // Refresh button
-            uiRefresh.IsEnabled = true;
+            //uiRefresh.IsEnabled = true;
 
             //if (sender != null)   // there is no call other than from event button, so always sender < > null?
             //{

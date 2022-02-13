@@ -215,10 +215,10 @@ namespace Andro2UWP
                 var msaAuthProvider = new MsaAuthenticationProvider
                 (
                     ctxt,
-                    GoneDriveConsumerClientId, // this.
-                    GoneDriveConsumerReturnUrl, // this.
-                    Gscopes, // this.
-                    new CredentialVault(GoneDriveConsumerClientId) // this.
+                    oneDriveConsumerClientId, // this.
+                    oneDriveConsumerReturnUrl, // this.
+                    scopes, // this.
+                    new CredentialVault(oneDriveConsumerClientId) // this.
                 );
 #endif
 
@@ -388,7 +388,7 @@ namespace Andro2UWP
                 }
             }
 
-            //' lista komend danej aplikacji
+            //' filelist komend danej aplikacji
             //Dim sLocalCmds As String = "add CHANNEL" & vbTab & "dodanie kanału"
 
             //' zwroci false gdy to nie jest RemoteSystem; gdy true, to zainicjalizowało odbieranie
@@ -400,17 +400,17 @@ namespace Andro2UWP
         }//OnBackgroundActivated end 
 
 
-        // LoadNews / WczytajNowosci
+        // LoadNews 
         public async static System.Threading.Tasks.Task<bool> LoadNews(bool bMsg)
         {
             p.k.DebugOut("LoadNews(" + bMsg.ToString());
 
             if (!await initODandDict(bMsg))
             {
-                return false;     // przede wszystkim - odczytanie slownikow na nowo (żeby nie było reset słownika!)
+                // przede wszystkim - odczytanie slownikow na nowo (żeby nie było reset słownika!)
+                return false;     
             }
 
-            //await WczytajNowe(bMsg);
             await LoadNew(bMsg);
 
             return true;
@@ -655,11 +655,12 @@ namespace Andro2UWP
         {
             p.k.DebugOut("LoadNew(" + bMsg.ToString());
 
-            if (!p.k.GetPlatform("uwp"))
-            {
-                if (bMsg) await p.k.DialogBoxAsync("How did you press it not to be on UWP?");
-                return;
-            }
+            // RnD
+            //if (!p.k.GetPlatform("uwp"))
+            //{
+            //    if (bMsg) await p.k.DialogBoxAsync("How did you press it not to be on UWP?");
+            //    return;
+            //}
 
             if (!p.k.NetIsIPavailable(false))
             {
@@ -669,11 +670,13 @@ namespace Andro2UWP
 
             if (bMsg) p.k.ProgRingShow(true);
 
+            // RnD: call on Android or.. not? 
             // load the list from OneDrive - for now on a button,
             // later maybe on a timer
             // (desktop: still online, phone - rarely)
             await ReadToastsList(bMsg);   // dir *toast.txt
 
+            // RnD : Android is supported?
             // and their contents - from progressbar
             await DoczytajTresci(bMsg);
 
@@ -687,11 +690,11 @@ namespace Andro2UWP
             p.k.DebugOut("Read Toasts List");
 
             // two checks that should be done a long time ago (in the LoadNew function), but just in case
-            if (!p.k.GetPlatform("uwp"))
-            {
-                if (bMsg) await p.k.DialogBoxAsync("jakim cudem nacisnales to nie bedac na UWP?");
-                return;
-            }
+            //if (!p.k.GetPlatform("uwp"))
+            //{
+            //    if (bMsg) await p.k.DialogBoxAsync("jakim cudem nacisnales to nie bedac na UWP?");
+            //    return;
+            //}
 
             if (!p.k.NetIsIPavailable(false))
             {
@@ -762,11 +765,11 @@ namespace Andro2UWP
         private static async System.Threading.Tasks.Task DoczytajTresci(bool bMsg)
         {
             // two checks that should be done a long time ago (in the LoadNew function), but just in case
-            if (!p.k.GetPlatform("uwp"))
-            {
-                if (bMsg) await p.k.DialogBoxAsync("jakim cudem nacisnales to nie bedac na UWP?");
-                return;
-            }
+            //if (!p.k.GetPlatform("uwp"))
+            //{
+            //    if (bMsg) await p.k.DialogBoxAsync("jakim cudem nacisnales to nie bedac na UWP?");
+            //    return;
+            //}
 
             if (!p.k.NetIsIPavailable(false))
             {
@@ -955,12 +958,14 @@ namespace Andro2UWP
                 Windows.Storage.StorageFolder oFold = Windows.Storage.ApplicationData.Current.LocalFolder;
                 Windows.Storage.StorageFile sFile = await oFold.CreateFileAsync(oItem.sFileName, 
                 Windows.Storage.CreationCollisionOption.OpenIfExists);
-               
-                             
+
+                // -------------------------------------------------------------------------
+                // Plan A
+                /*
                 string oSent = await p.od.SaveFileToOneDrive
                     (
                     sFile, 
-                    "Apps/Andro2UWP",// onedrive special folder
+                    "Apps/Andro2UWP/",// onedrive special folder
                     oItem.sMessage); 
                 
                 // RnD: TEST IT!!
@@ -971,6 +976,22 @@ namespace Andro2UWP
                     oItem.bOnOneDrive = false;  // zaznacz, że jednak się nie udało wysłać
                     break;
                 }
+                */
+
+                // **********************************************************************************
+                // Plan B
+                bool oResult = await p.od.ReplaceOneDriveFileContent
+                (
+                    "Apps/Andro2UWP/" + oItem.sFileName, 
+                    oItem.sMessage
+                );
+                if (oResult == false)
+                {
+                    await AddLogEntry("FAIL creating toastfile on OneDrive - skipping (operation)", false);
+                    oItem.bOnOneDrive = false;  // zaznacz, że jednak się nie udało wysłać
+                    break;
+                }
+                // -------------------------------------------------------------------------
 
                 oItem.bOnOneDrive = true;
             }

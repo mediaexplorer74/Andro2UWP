@@ -143,7 +143,7 @@ namespace p
         }
 
 
-
+        // TODO: Redo
         // Public Async Function OpenCreateOneDriveFolder(sParentId As String, sName As String, bCreate As Boolean) As Task(Of String)
         // If Not IsOneDriveOpened() Then Return ""
 
@@ -183,6 +183,8 @@ namespace p
 
         // End Function
 
+
+        // Replace onedrive file content
         public async static Task<bool> ReplaceOneDriveFileContent(string sFilePathname, string sTresc)
         {
 
@@ -392,7 +394,7 @@ namespace p
                 Microsoft.OneDrive.Sdk.Item oItem = null/* TODO Change to default(_) if this is not a reference type */;
                 bool bError = false;
 
-                string sOutFileName = sFolderPath + "/" + oFile.Name;
+                string sOutFileName = sFolderPath + oFile.Name;
 
                 try
                 {
@@ -833,7 +835,7 @@ namespace p
         /// 0: wszystkie usunął
         /// >0: ile plików się nie udało usunąć
         ///      </summary>
-        public async static Task<int> UsunPlikiOneDrive(string sFolderPathname, List<string> lFilesToDel)
+        public async static Task<int> DeleteFilesFromOneDrive(string sFolderPathname, List<string> lFilesToDel)
         {
             if (!IsOneDriveOpened())
                 return -1;
@@ -868,7 +870,7 @@ namespace p
 
             return lFilesToDel.Count - iCnt;
 
-        }//UsunPlikiOneDrive end
+        }//DeleteFilesFromOneDrive end
 
     }//class od end
 
