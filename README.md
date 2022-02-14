@@ -4,7 +4,7 @@
 
 My attempt to recover PKar70's Andro2UWP project, branch 10.2002.5
 
-Technical version (build) 1.0.13.0
+Technical version (build) 1.0.14.0
 
 Status: alpha (RnD)
 
@@ -31,7 +31,7 @@ Phases of "building the solution":
 
 [3] Tech. project +-
 
-[4] Dev >> [40%]
+[4] Dev >> [42%]
 
 [5] "Intro" -
 

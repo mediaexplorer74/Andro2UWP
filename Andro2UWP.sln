@@ -13,6 +13,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Andro2UWP\Andro2UWP.Shared\Andro2UWP.Shared.projitems*{275b3515-3bbf-4541-a575-8674d2ece676}*SharedItemsImports = 4
 		Andro2UWP\Andro2UWP.Shared\Andro2UWP.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
+		Andro2UWP\Andro2UWP.Shared\Andro2UWP.Shared.projitems*{e92e8f8f-6bbb-4e5b-8d76-0cda640e84f3}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM

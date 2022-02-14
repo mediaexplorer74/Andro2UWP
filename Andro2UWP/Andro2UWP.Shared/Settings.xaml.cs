@@ -51,9 +51,10 @@ namespace Andro2UWP
             p.k.GetSettingsBool(uiDebugLog, "debugLog");
 
             // RnD zone : Toast feature
-            uiCreateToasts.IsEnabled = true;//false;   // as yet unattended this
-            
-            //uiHowMany.Text = p.k.GetSettingsInt("howMany", 10).ToString();
+            //uiCreateToasts.IsEnabled = true;//false;   // as yet unattended this
+#if !__ANDROID__
+            uiHowMany.Text = p.k.GetSettingsInt("howMany", 10).ToString();
+#endif
 
         }//uiPage_Loaded end
 
@@ -78,7 +79,7 @@ namespace Andro2UWP
         {
             if (p.k.GetPlatform("uwp"))
             {
-                await p.k.DialogBoxAsync("jakim cudem nacisnales to nie bedac na Androidzie?");
+                await p.k.DialogBoxAsync("How you press this magic button not on Android?...");
                 return;
             }
 
@@ -129,7 +130,11 @@ namespace Andro2UWP
             p.k.SetSettingsBool(uiSortListMode, "sortDescending");
             
             p.k.SetSettingsBool(uiDebugLog, "debugLog");
-            //p.k.SetSettingsInt("howMany", int.Parse(uiHowMany.Text));
+
+#if !__ANDROID__
+            p.k.SetSettingsInt("howMany", int.Parse(uiHowMany.Text));
+#endif
+          
 
             Frame.GoBack();
 

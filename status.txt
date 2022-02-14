@@ -1,4 +1,4 @@
-v1.0.13-alpha
+v1.0.14-alpha
 
 Work in progress
-Attempt to recover sending (and storing) toast files on(to) OneDrive
+Attempt to recover the passing process of toast files located at (on/in) OneDrive storage

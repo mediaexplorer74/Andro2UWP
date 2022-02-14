@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Andro2UWP;
 using Windows.UI.Xaml;
+using System.Diagnostics;
 
 // p, pkar's thing =)
 namespace p
@@ -184,7 +185,275 @@ namespace p
         // End Function
 
 
+        // RootOrAppRoot
+        private static Microsoft.OneDrive.Sdk.IItemRequestBuilder RootOrAppRoot()
+        {
+            var app = (App)Application.Current;
+
+            //if (gbLimitToAppFolder)
+            //    return goOneDriveClnt.Drive.Special.AppRoot;
+            //else
+
+            //return goOneDriveClnt.Drive.Root;
+
+            return app.uOneDriveClient.Drive.Root;
+
+        }//RootOrAppRoot end 
+
+
+        // - Plan A -------------------------------------------------------------------
+
+        // SaveFileToOneDrive
+        public async static Task<string> SaveFileToOneDrive
+        (
+            Windows.Storage.StorageFile oFile,
+            string sFolderPath,
+            string sMessage //bool bCanResetWifi
+        )
+        {
+            var app = (App)Application.Current;
+
+            // return: link (so you can be without OneDrive to get to the last frame
+            //         ru: ссылка (чтобы вы могли без OneDrive добраться до последнего кадра)
+            // RnD
+            if (!IsOneDriveOpened())
+            {
+                oFile = null/* TODO Change to default(_) if this is not a reference type */;
+                return "";
+            }
+
+            // RnD
+            //if (gInOneDriveCommand)
+            //{
+            //    oFile = null/* TODO Change to default(_) if this is not a reference type */;
+            //    return "";
+            //}
+
+            gInOneDriveCommand = true;
+
+            // oneDriveClient.Drive.Root.ItemWithPath("Apps/BicycleApp/ALUWP.db").Request().GetAsync();
+
+            try
+            {
+                // OpenStreamForReadAsync
+                Stream oStream = await oFile.OpenStreamForReadAsync();
+
+                if (!oStream.CanRead)
+                {
+                    p.k.CrashMessageAdd("@CopyFileToOneDrive", "not readable stream?");
+                    return "";
+                }
+
+                Microsoft.OneDrive.Sdk.Item oItem = null; // TODO Change to default(_) if this is not a reference type 
+                bool bError = false;
+
+                string sOutFileName = sFolderPath + oFile.Name;
+
+                try
+                {
+                    oItem = await RootOrAppRoot().ItemWithPath(sOutFileName)
+                        .Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream); //(oRdr.BaseStream)
+                }
+                catch (Exception ex)
+                {
+                    p.k.CrashMessageAdd("@CopyFileToOneDrive while trying to copy file (try 1)", ex);
+                    bError = true;
+                }
+
+                if (bError)
+                {
+                    // czasem nie kopiuje, jakby blokada i potrzeba reconnect?
+                    return "";
+                    //if (!bCanResetWifi || !await p.k.NetWiFiOffOn())
+                    //{
+                    //    p.k.CrashMessageAdd("cannot reconnect WiFi", "");
+                    //    return "";
+                    //}
+
+                    //// If mbInDebug Then Debug.WriteLine("wifi reconnect OK")
+                    //await Task.Delay(15 * 1000);     // 10 sekund na przywrócenie WiFi
+                    //if (!await OpenOneDriveInt())
+                    //{
+                    //    p.k.CrashMessageAdd("cannot reconnect OneDrive", "");
+                    //    bError = true;
+                    //}
+                    //else
+                    //{
+                    //    // It changed (at least sometimes) to not CanRead; so the error was with PutAsync 
+                    //    if (!oStream.CanSeek || !oStream.CanRead)
+                    //    {
+                    //        oStream.Dispose();
+                    //        oStream = await oFile.OpenStreamForReadAsync();
+                    //    }
+                    //    else
+                    //        oStream.Seek(0, SeekOrigin.Begin);
+
+                    //    oItem = await goOneDriveClnt.Drive.Root.ItemWithPath(sOutFileName).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream);   // (oRdr.BaseStream)
+                    //}
+                }
+
+                //oStream.Dispose();
+                //oStream = null;
+
+                //
+                // return: link (so you can be without OneDrive to get to the last frame
+                //         ru: ссылка (чтобы вы могли без OneDrive добраться до последнего кадра)
+                string sLink = "";
+
+                if (oItem != null)
+                {
+                    Microsoft.OneDrive.Sdk.Permission oLink = null/* TODO Change to default(_) if this is not a reference type */;
+
+                    oLink = await
+                        app.uOneDriveClient.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
+
+                    //goOneDriveClnt.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
+
+                    sLink = oLink.Link.ToString();
+
+                    oLink = null/* TODO Change to default(_) if this is not a reference type */;
+                }
+                oItem = null/* TODO Change to default(_) if this is not a reference type */;
+                
+                gInOneDriveCommand = false;
+
+
+                return sLink;
+            }
+            catch (Exception ex)
+            {
+                gInOneDriveCommand = false;
+                return "";
+            }
+
+        }//SaveFileToOneDrive end
+
+
+        // CopyFileToOneDrive
+        public async static Task<string> CopyFileToOneDrive(Windows.Storage.StorageFile oFile, string sFolderPath, bool bCanResetWifi)
+        {
+            var app = (App)Application.Current;
+
+            // return: link (so you can be without OneDrive to get to the last frame
+
+            if (!IsOneDriveOpened())
+                return "";
+
+            //RnD
+            //if (gInOneDriveCommand)
+            //    return "";
+
+            gInOneDriveCommand = true;
+
+            // oneDriveClient.Drive.Root.ItemWithPath("Apps/BicycleApp/ALUWP.db").Request().GetAsync();
+
+
+
+            try
+            {
+                Stream oStream = await oFile.OpenStreamForReadAsync();
+
+                // RnD
+                oStream.Seek(0, SeekOrigin.Begin);
+
+                if (!oStream.CanRead)
+                {
+                    p.k.CrashMessageAdd("@CopyFileToOneDrive", "not readable stream?");
+                    return "";
+                }
+
+                Microsoft.OneDrive.Sdk.Item oItem = null;
+                bool bError = false;
+
+                string sOutFileName = sFolderPath + "/" + oFile.Name;
+
+                try
+                {
+                    oItem =
+                        await RootOrAppRoot().ItemWithPath(sOutFileName).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream);   // (oRdr.BaseStream)
+                }
+                catch (Exception ex)
+                {
+                    p.k.CrashMessageAdd("@CopyFileToOneDrive while trying to copy file (try 1)", ex);
+                    bError = true;
+                }
+
+                // sometimes it does not copy, as if the lock and need reconnect?
+                if (bError)
+                {
+                    return "";
+
+                    //if (!bCanResetWifi || !await p.k.NetWiFiOffOn())
+                    //{
+                    //    p.k.CrashMessageAdd("cannot reconnect WiFi", "");
+                    //    return "";
+                    //}
+
+                    //// If mbInDebug Then Debug.WriteLine("wifi reconnect OK")
+                    //await Task.Delay(15 * 1000);     // 10 sekund na przywrócenie WiFi
+                    //if (!await OpenOneDriveInt())
+                    //{
+                    //    p.k.CrashMessageAdd("cannot reconnect OneDrive", "");
+                    //    bError = true;
+                    //}
+                    //else
+                    //{
+                    //    // here it changed (at least sometimes) to not CanRead -
+                    //    // so the error with PutAsync was
+                    //    if (!oStream.CanSeek || !oStream.CanRead)
+                    //    {
+                    //        oStream.Dispose();
+                    //        oStream = await oFile.OpenStreamForReadAsync();
+                    //    }
+                    //    else
+                    //        oStream.Seek(0, SeekOrigin.Begin);
+
+                    //    oItem =
+                    //      await goOneDriveClnt.Drive.Root.ItemWithPath(sOutFileName).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream);   // (oRdr.BaseStream)
+                    //}
+                }
+
+                //oStream.Dispose();
+                //oStream = null;
+
+                string sLink = "";
+
+                if (oItem != null)
+                {
+                    Microsoft.OneDrive.Sdk.Permission oLink = null;
+
+
+                    oLink = await
+                        app.uOneDriveClient.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
+
+                    sLink = oLink.Link.ToString();
+
+                    oLink = null;
+                }
+
+                oItem = null;
+                gInOneDriveCommand = false;
+
+                return sLink;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ex] Exception: " + ex.Message);
+
+                gInOneDriveCommand = false;
+                return "";
+            }
+
+        }//CopyFileToOneDrive end
+
+
+        // -------------------------------------------
+
+
+        // - Plan B ----------------------------------- 
+
         // Replace onedrive file content
+        // ReplaceOneDriveFileContent (string, string)
         public async static Task<bool> ReplaceOneDriveFileContent(string sFilePathname, string sTresc)
         {
 
@@ -202,276 +471,86 @@ namespace p
             oStream = null;
 
             return bRet;
-        }
+        
+        }//
 
 
-        private static Microsoft.OneDrive.Sdk.IItemRequestBuilder RootOrAppRoot()
+        // Replace onedrive file content (from stream)
+        // ReplaceOneDriveFileContent (string, Stream)
+        public async static Task<bool> ReplaceOneDriveFileContent(string sFilePathname, Stream sTresc)
         {
             var app = (App)Application.Current;
 
-            //if (gbLimitToAppFolder)
-            //    return goOneDriveClnt.Drive.Special.AppRoot;
-            //else
-
-            //return goOneDriveClnt.Drive.Root;
-            return app.uOneDriveClient.Drive.Root;
-        }
-
-        public async static Task<bool> ReplaceOneDriveFileContent(string sFilePathname, Stream sTresc)
-        {
             if (!IsOneDriveOpened())
                 return false;     // gdy nie widac OneDrive
+            
             if (gInOneDriveCommand)
                 return false;
+            
             gInOneDriveCommand = true;
 
+            Microsoft.OneDrive.Sdk.Item oItem = null;
             bool bError = false;
 
             sTresc.Seek(0, SeekOrigin.Begin);
 
             try
             {
-                await RootOrAppRoot().ItemWithPath(sFilePathname).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(sTresc);
+                oItem = await RootOrAppRoot().ItemWithPath(sFilePathname)
+                    .Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(sTresc);
             }
             catch (Exception ex)
             {
+                Console.WriteLine("[ex] ReplaceOneDriveFileContent - Exception: " + ex.Message);
+                
                 bError = true;
             }
 
-            gInOneDriveCommand = false;
+            // *** Experimental zone **********************************
 
-            return !bError;
-        }
-
-
-        public async static Task<string> CopyFileToOneDrive(Windows.Storage.StorageFile oFile, string sFolderPath, bool bCanResetWifi)
-        {
-            var app = (App)Application.Current;
-
-            // return: link (zeby mozna bylo bez OneDrive sie dostac do ostatniej ramki
-
-            if (!IsOneDriveOpened())
-                return "";
-
-            if (gInOneDriveCommand)
-                return "";
-
-            gInOneDriveCommand = true;
-
-            // oneDriveClient.Drive.Root.ItemWithPath("Apps/BicycleApp/ALUWP.db").Request().GetAsync();
-
-            try
+            if (!bError)
             {
-                Stream oStream = await oFile.OpenStreamForReadAsync();
-                if (!oStream.CanRead)
-                {
-                    p.k.CrashMessageAdd("@CopyFileToOneDrive", "not readable stream?");
-                    return "";
-                }
-
-                Microsoft.OneDrive.Sdk.Item oItem = null;
-                bool bError = false;
-
-                string sOutFileName = sFolderPath + "/" + oFile.Name;
-
-                try
-                {
-                    oItem = await RootOrAppRoot().ItemWithPath(sOutFileName).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream);   // (oRdr.BaseStream)
-                }
-                catch (Exception ex)
-                {
-                    p.k.CrashMessageAdd("@CopyFileToOneDrive while trying to copy file (try 1)", ex);
-                    bError = true;
-                }
-
-                if (bError)
-                {
-                    // czasem nie kopiuje, jakby blokada i potrzeba reconnect?
-                    return "";
-                    //if (!bCanResetWifi || !await p.k.NetWiFiOffOn())
-                    //{
-                    //    p.k.CrashMessageAdd("cannot reconnect WiFi", "");
-                    //    return "";
-                    //}
-
-                    //// If mbInDebug Then Debug.WriteLine("wifi reconnect OK")
-                    //await Task.Delay(15 * 1000);     // 10 sekund na przywrócenie WiFi
-                    //if (!await OpenOneDriveInt())
-                    //{
-                    //    p.k.CrashMessageAdd("cannot reconnect OneDrive", "");
-                    //    bError = true;
-                    //}
-                    //else
-                    //{
-                    //    // tu sie zmieniało (przynajmniej czasem) na nie CanRead - tak błąd z PutAsync był
-                    //    if (!oStream.CanSeek || !oStream.CanRead)
-                    //    {
-                    //        oStream.Dispose();
-                    //        oStream = await oFile.OpenStreamForReadAsync();
-                    //    }
-                    //    else
-                    //        oStream.Seek(0, SeekOrigin.Begin);
-
-                    //    oItem = await goOneDriveClnt.Drive.Root.ItemWithPath(sOutFileName).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream);   // (oRdr.BaseStream)
-                    //}
-                }
-
-                oStream.Dispose();
-                oStream = null;
 
                 string sLink = "";
 
                 if (oItem != null)
                 {
                     Microsoft.OneDrive.Sdk.Permission oLink = null;
-                    
-                    
-                    oLink = await 
-                        app.uOneDriveClient.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
-                    //goOneDriveClnt.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
 
-                    sLink = oLink.Link.ToString();
-                    
+
+                    oLink = await
+                        app.uOneDriveClient.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
+
+                    sLink = oLink.ShareId.ToString();
+
                     oLink = null;
                 }
 
                 oItem = null;
                 gInOneDriveCommand = false;
 
-                // ' próba - czy zmniejszy się zuzycie pamięci
-                // gInOneDriveCommand = Nothing
-                // Await OpenOneDriveInt()
-
-                return sLink;
-            }
-            catch (Exception ex)
-            {
-                gInOneDriveCommand = false;
-                return "";
-            }
-
-        }//
-
-
-        // SaveFileToOneDrive
-        public async static Task<string> SaveFileToOneDrive
-        (
-            Windows.Storage.StorageFile oFile, 
-            string sFolderPath,
-            string sMessage //bool bCanResetWifi
-        )
-        {
-            var app = (App)Application.Current;
-
-            // return: link (zeby mozna bylo bez OneDrive sie dostac do ostatniej ramki
-
-            if (!IsOneDriveOpened())
-            {
-                oFile = null/* TODO Change to default(_) if this is not a reference type */;
-                return "";
-            }
-
-            if (gInOneDriveCommand)
-            {
-                oFile = null/* TODO Change to default(_) if this is not a reference type */;
-                return "";
-            }
-
-            gInOneDriveCommand = true;
-
-            // oneDriveClient.Drive.Root.ItemWithPath("Apps/BicycleApp/ALUWP.db").Request().GetAsync();
-
-            try
-            {
-                Stream oStream = await oFile.OpenStreamForReadAsync();
-                
-                if (!oStream.CanRead)
+                if (sLink == "")
                 {
-                    p.k.CrashMessageAdd("@CopyFileToOneDrive", "not readable stream?");
-                    return "";
-                }
-
-                Microsoft.OneDrive.Sdk.Item oItem = null/* TODO Change to default(_) if this is not a reference type */;
-                bool bError = false;
-
-                string sOutFileName = sFolderPath + oFile.Name;
-
-                try
-                {
-                    oItem = await RootOrAppRoot().ItemWithPath(sOutFileName).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream);   // (oRdr.BaseStream)
-                }
-                catch (Exception ex)
-                {
-                    p.k.CrashMessageAdd("@CopyFileToOneDrive while trying to copy file (try 1)", ex);
                     bError = true;
                 }
 
-                if (bError)
-                {
-                    // czasem nie kopiuje, jakby blokada i potrzeba reconnect?
-                    return "";
-                    //if (!bCanResetWifi || !await p.k.NetWiFiOffOn())
-                    //{
-                    //    p.k.CrashMessageAdd("cannot reconnect WiFi", "");
-                    //    return "";
-                    //}
-
-                    //// If mbInDebug Then Debug.WriteLine("wifi reconnect OK")
-                    //await Task.Delay(15 * 1000);     // 10 sekund na przywrócenie WiFi
-                    //if (!await OpenOneDriveInt())
-                    //{
-                    //    p.k.CrashMessageAdd("cannot reconnect OneDrive", "");
-                    //    bError = true;
-                    //}
-                    //else
-                    //{
-                    //    // tu sie zmieniało (przynajmniej czasem) na nie CanRead - tak błąd z PutAsync był
-                    //    if (!oStream.CanSeek || !oStream.CanRead)
-                    //    {
-                    //        oStream.Dispose();
-                    //        oStream = await oFile.OpenStreamForReadAsync();
-                    //    }
-                    //    else
-                    //        oStream.Seek(0, SeekOrigin.Begin);
-
-                    //    oItem = await goOneDriveClnt.Drive.Root.ItemWithPath(sOutFileName).Content.Request().PutAsync<Microsoft.OneDrive.Sdk.Item>(oStream);   // (oRdr.BaseStream)
-                    //}
-                }
-
-                oStream.Dispose();
-                oStream = null;
-
-                string sLink = "";
-
-                if (oItem != null)
-                {
-                    Microsoft.OneDrive.Sdk.Permission oLink = null/* TODO Change to default(_) if this is not a reference type */;
-
-                    oLink = await
-                        app.uOneDriveClient.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
-                    
-                    //goOneDriveClnt.Drive.Items[oItem.Id].CreateLink("view").Request().PostAsync();
-
-                    sLink = oLink.Link.ToString();
-                    
-                    oLink = null/* TODO Change to default(_) if this is not a reference type */;
-                }
-                oItem = null/* TODO Change to default(_) if this is not a reference type */;
-                gInOneDriveCommand = false;
-
-                // ' próba - czy zmniejszy się zuzycie pamięci
-                // gInOneDriveCommand = Nothing
-                // Await OpenOneDriveInt()
-
-                return sLink;
             }
-            catch (Exception ex)
-            {
-                gInOneDriveCommand = false;
-                return "";
-            }
+      
+
+            // **************************************************
+
+
+            gInOneDriveCommand = false;
+
+            return !bError;
+
+        }//ReplaceOneDriveFileContent end
         
-        }//
+        // --------
+
+       
+
+       
 
 
         // ReadOneDriveTextFileId(string sFileId)
@@ -481,12 +560,19 @@ namespace p
             if (stream is null) return null;
 
             var streamRdr = new StreamReader(stream);
+
             string retVal = streamRdr.ReadToEnd();
+            
             streamRdr.Dispose();
-            if (stream != null) stream.Dispose();
+
+            if (stream != null)
+            { 
+                stream.Dispose(); 
+            }
 
             return retVal;
-        }
+
+        }//ReadOneDriveTextFileId end
 
 
         // ReadOneDriveTextFile(string sPath)
@@ -549,10 +635,10 @@ namespace p
             catch (Exception ex)
             {
                 // but the file may not exist - we accept this option ... TODO
-                if (ex.Message != "Item does not exist")
-                {
+                //if (ex.Message != "Item does not exist")
+                //{
                     p.k.CrashMessageAdd("@GetOneDriveFileStream(oItemReq", ex);
-                }
+                //}
 
                 return null;
             }
@@ -560,6 +646,7 @@ namespace p
         }//GetOneDriveFileStream
 
 
+        // Stream GetOneDriveFileIdStream(sFileId)
         public async static Task<Stream> GetOneDriveFileIdStream(string sFileId)
         {
             p.k.DebugOut("GetOneDriveFileIdStream(" + sFileId);
@@ -593,9 +680,10 @@ namespace p
                 gInOneDriveCommand = false;
             }
 
-        }
+        }//GetOneDriveFileIdStream end
 
-        // GetOneDriveFileStream(string sFilePath)
+
+        // Stream GetOneDriveFileStream(sFilePath)
 
         public async static Task<Stream> GetOneDriveFileStream(string sFilePath)
         {

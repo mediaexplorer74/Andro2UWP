@@ -71,9 +71,10 @@ namespace p
         #region "osdepended"
 
         // Get Win./And. ver. build number
+        // WinVer
         public static int WinVer()
         {
-#if NETFX_CORE
+#if !__ANDROID__ //NETFX_CORE
             // Unknown = 0,
             // Threshold1 = 1507,   // 10240
             // Threshold2 = 1511,   // 10586
@@ -93,57 +94,67 @@ namespace p
             return (int)Android.OS.Build.VERSION.SdkInt;
 #endif
             return 0; // TODO
-        }
+
+        }//WinVer end
 
 
-
+        // Get Platform name
+        // string GetPlatform
         public static string GetPlatform()
         {
-#if NETFX_CORE
-            return "uwp";
-#elif __ANDROID__
+            //#if NETFX_CORE 
+            //           return "uwp";
+#if __ANDROID__//#elif __ANDROID__
             return "android";
 #elif __IOS__
         return "ios";
 #elif __WASM__
             return "wasm";
 #else
-        return "other";
+        return "uwp"; //return "other";
 #endif
-        }
+        }//GetPlatform end
 
 
 
-
+        // Check if choosed platform is good one =)
+        // bool GetPlatform
         public static bool GetPlatform(string sPlatform)
         {
             if (string.IsNullOrEmpty(sPlatform)) return false;
+
             if (GetPlatform().ToLower() == sPlatform.ToLower()) return true;
+            
             return false;
         }
 
-        // ?
-
+        // Check the is system the desktop (family) os ? 
+        // IsFamilyDesktop
         public static bool IsFamilyDesktop()
         {
             return (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
-        }
 
+        }//IsFamilyDesktop end
+
+        // Check the is system the mobile (family) os ? 
+        // IsFamilyMobile
         public static bool IsFamilyMobile()
         {
 
-            // Brewiarz: wymuszanie zmiany dark/jasne
-            // GrajCyganie: zmiana wielkosci okna
-            // pociagi: ile rzadkow ma pokazac (rozmiar ekranu)
-            // kamerki: full screen wlacz/wylacz tylko dla niego
-            // sympatia...
+            // Brewhouse: forcing change dark / bright
+            // Playgans: Change window size
+            // Trains: how rare to show (screen size)
+            // Cameras: full screen on / off just for him
+            // Sympathy...
 
-            // TODO: WASM w zale?no?ci od rozmiaru ekranu?
+            // TODO: WASM in Zale?well?you from the size of the screen?
             return (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile");
             //return Windows.System.Profile.AnalyticsInfo.DeviceForm.ToLower().Contains("mobile");
-        }
 
+        }//IsFamilyMobile end
 
+        // GetAppVers
+        // string GetAppVers
         public static string GetAppVers()
         {
             return Windows.ApplicationModel.Package.Current.Id.Version.Major + "." +
@@ -152,7 +163,8 @@ namespace p
 
         }
 
-        // Get app. version ... ?
+        // Get full app. version ... ?
+        // GetAppVers
         public static string GetAppVers(TextBlock Ver)
         {
             return Windows.ApplicationModel.Package.Current.Id.Version.Major + "." +
@@ -165,6 +177,7 @@ namespace p
         // -- Timer Triggers ---------------------------------------------------------
         #region "triggers"
 
+        // IsTriggersRegistered
         public static bool IsTriggersRegistered(string sNamePrefix)
         {
             sNamePrefix = sNamePrefix.Replace(" ", "").Replace("'", "");
@@ -178,28 +191,37 @@ namespace p
             }
             catch
             {
-                // np. gdy nie ma permissions, to mo?e by? FAIL
+                // Not enougth permissions? FAIL
             }
 
             return false;
-        }
+
+        }//IsTriggersRegistered end
+
 
         /// <summary>
-        /// jakikolwiek z prefixem Package.Current.DisplayName
+        /// any prefixed with Package.Current.DisplayName
         /// </summary>
+        // IsTriggersRegistered
         public static bool IsTriggersRegistered()
         {
             return IsTriggersRegistered(Windows.ApplicationModel.Package.Current.DisplayName);
-        }
+
+        }//IsTriggersRegistered end
+
 
         /// <summary>
-        /// wszystkie z prefixem Package.Current.DisplayName
+        /// all prefixed Package.Current.DisplayName
         /// </summary>
+        // UnregisterTriggers
         public static void UnregisterTriggers()
         {
             UnregisterTriggers(Windows.ApplicationModel.Package.Current.DisplayName);
-        }
+        
+        }//UnregisterTriggers end
 
+
+        // UnregisterTriggers
         public static void UnregisterTriggers(string sNamePrefix)
         {
             sNamePrefix = sNamePrefix.Replace(" ", "").Replace("'", "");
@@ -216,10 +238,13 @@ namespace p
             }
             catch
             {
-                // np. gdy nie ma permissions, to mo?e by? FAIL
+                // For example, if there is no authority/ permissions, then Mo?E would? FAIL
             }
-        }
 
+        }//UnregisterTriggers end 
+
+
+        // CanRegisterTriggersAsync
         public static async System.Threading.Tasks.Task<bool> CanRegisterTriggersAsync()
         {
             Windows.ApplicationModel.Background.BackgroundAccessStatus oBAS;
@@ -229,11 +254,12 @@ namespace p
             if (oBAS == Windows.ApplicationModel.Background.BackgroundAccessStatus.AllowedSubjectToSystemPolicy) return true;
 
             return false;
-        }
-        
-        
-        // TODO : REDO IT!! Bad timer
 
+        }//CanRegisterTriggersAsync end
+
+
+        // TODO : REDO IT
+        // RegisterTimerTrigger
         public static Windows.ApplicationModel.Background.BackgroundTaskRegistration RegisterTimerTrigger(string sName, uint iMinutes, bool bOneShot = false, Windows.ApplicationModel.Background.SystemCondition oCondition = null)
         {
             try
@@ -245,25 +271,31 @@ namespace p
                 builder.Name = sName;
 
                 if (oCondition is object) builder.AddCondition(oCondition);
-                
-                var oRet = builder.Register();
+
+                Windows.ApplicationModel.Background.BackgroundTaskRegistration oRet = builder.Register();
                 
                 return oRet;
             }
             catch
             {
-                // np. gdy nie ma permissions, to mo?e by? FAIL
+                // For example, if there is no authority/permissions, then Mo?E would? FAIL
             }
 
             return null;
-        }
 
+        }//RegisterTimerTrigger end
+
+
+        // GetTriggerNamePrefix
         private static string GetTriggerNamePrefix()
         {
             string sName = Windows.ApplicationModel.Package.Current.DisplayName;
             sName = sName.Replace(" ", "").Replace("'", "");
+
             return sName;
-        }
+        
+        }//GetTriggerNamePrefix end
+
 
         private static string GetTriggerPolnocnyName()
         {
@@ -292,7 +324,7 @@ namespace p
             }
             catch
             {
-                // brak mo?liwo?ci rejestracji (na przyk?ad)
+                // no mo?Liwa?you registration (for example?(ad)
                 return null;
             }
         }
@@ -315,23 +347,24 @@ namespace p
         }
 
         /// <summary>
-        /// para z DodajTriggerPolnocny, do wywo?ywania w OnBackgroundActivated
+        /// couple with AddTriggerPolnocny, do inOnBackgroundActivated
         /// </summary>
         public static bool IsThisTriggerPolnocny(Windows.ApplicationModel.Activation.BackgroundActivatedEventArgs args)
         {
             string sName = GetTriggerPolnocnyName();
             if (args.TaskInstance.Task.Name != sName) return false;
 
-            // no dobrze, jest to trigger pó?nocny, ale czy o pó?nocy...
+            // all right, is this trigger for night time (?), but is it at 1:00 p.m. - night ?...
             string sCurrDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             SetSettingsString("lastPolnocnyTry", sCurrDate);
 
             bool bRet = false;
             DateTime oDateNew = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 40, 0);
 
-            if (DateTime.Now.Hour == 23 && DateTime.Now.Minute > 20)    // 40 minut, ale system dodaje ±15 minut!
+            // 40 minut, ale system dodaje ±15 minut!
+            if (DateTime.Now.Hour == 23 && DateTime.Now.Minute > 20)    
             {
-                // tak, to jest pó?nocny o pó?nocy
+                // yeah, this is mid-night (shift night?) =)
                 bRet = true;
                 oDateNew = oDateNew.AddDays(1);
                 SetSettingsString("lastPolnocnyOk", sCurrDate);
@@ -344,14 +377,14 @@ namespace p
             int iMin = 0;
             iMin = (int)(oDateNew - DateTime.Now).TotalMinutes;
 
-            // Usuwamy istniej?cy, robimy nowy
+            // Delete exist "timer intity", we're making a new one.
             UnregisterTriggers(sName);
             RegisterTimerTrigger(sName, (uint)iMin, false);
 
             return bRet;
         }
 
-#if NETFX_CORE
+#if !__ANDROID__//NETFX_CORE
         public static Windows.ApplicationModel.Background.BackgroundTaskRegistration RegisterToastTrigger(string sName)
         {
             try
@@ -365,7 +398,7 @@ namespace p
             }
             catch
             {
-                // np. gdy nie ma permissions, to mo?e by? FAIL
+                // like when he's not authorized? FAIL
             }
 
             return null;
@@ -401,7 +434,7 @@ namespace p
         #region "RemoteSystem"
         public static bool IsTriggerAppService(Windows.ApplicationModel.Activation.BackgroundActivatedEventArgs args)
         {
-#if NETFX_CORE
+#if !__ANDROID__//NETFX_CORE
             Windows.ApplicationModel.AppService.AppServiceTriggerDetails oDetails =
                 args.TaskInstance.TriggerDetails as Windows.ApplicationModel.AppService.AppServiceTriggerDetails;
             if (oDetails is null) return false;
@@ -490,7 +523,7 @@ namespace p
 
         private static string GetAppMemData()
         {
-#if NETFX_CORE
+#if !__ANDROID__//NETFX_CORE
             return Windows.System.MemoryManager.AppMemoryUsage.ToString() + "/" + Windows.System.MemoryManager.AppMemoryUsageLimit.ToString();
 #else
             return "GetAppMemData is not implemented on non-UWP";
@@ -534,6 +567,8 @@ namespace p
             return sRet;
         }
 
+
+        // DumpTriggers
         private static string DumpTriggers()
         {
             string sRet = "";
@@ -551,10 +586,13 @@ namespace p
 
             return "Dumping Triggers\n\n" + sRet;
 
-        }
+        }//DumpTriggers end
+
+
+        // DumpToasts
         private static string DumpToasts()
         {
-#if NETFX_CORE
+#if !__ANDROID__//NETFX_CORE
             string sResult = "";
 
             foreach (Windows.UI.Notifications.ScheduledToastNotification oToast
@@ -571,8 +609,10 @@ namespace p
 #else
             return "DumpToasts on non-UWP is not implemented";
 #endif
-        }
+        }//DumpToasts end
 
+
+        // DumpSDKvers
         private static async System.Threading.Tasks.Task<string> DumpSDKvers()
         {
             var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync("AppxManifest.XML");
@@ -584,16 +624,16 @@ namespace p
                 //  <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.14393.0" MaxVersionTested="10.0.19041.0" />
 
             }
+
             return "bla";
-        }
+        
+        }//DumpSDKvers end
 
         #endregion
 
 
-
-
         #region "Datalog"
-#if NETFX_CORE
+#if !__ANDROID__ //NETFX_CORE
         private async static System.Threading.Tasks.Task<Windows.Storage.StorageFolder> GetSDcardFolderAsync()
         {
             // uwaga: musi by? w Manifest RemoteStorage oraz fileext!
@@ -625,7 +665,7 @@ namespace p
 
         private async static System.Threading.Tasks.Task<Windows.Storage.StorageFolder> GetLogFolderRootDatalogsOnSDcardAsync()
         {
-#if !NETFX_CORE
+#if __ANDROID__ || __IOS__//!NETFX_CORE
             return null;
 #else
             Windows.Storage.StorageFolder oSdCard = null;
@@ -838,7 +878,7 @@ namespace p
 #if DEBUG
             return true;
 #else
-#if !NETFX_CORE
+#if __ANDROID__ || __IOS__//!NETFX_CORE
             return false;
 #else
             // if(IsThisMoje()) return true;
@@ -1209,6 +1249,7 @@ namespace p
 
         public static void MakeToast(string sMsg, string sMsg1 = "")
         {
+            // Experimental
             /*
             string sXml = "<visual><binding template='ToastGeneric'><text>" + XmlSafeString(sMsg);
             if (!string.IsNullOrEmpty(sMsg1))
@@ -1221,7 +1262,8 @@ namespace p
             */
 
 
-#if NETFX_CORE || __ANDROID__
+
+#if !__ANDROID__ //|| NETFX_CORE (|| __ANDROID__) (?)
                 string sHdr = "";
                 string sAttrib = "";
 
@@ -1238,13 +1280,21 @@ namespace p
                 //    sAttrib = "<text placement=\"attribution\">SmogMeter</text>";
                 //}
 
-                var sXml = "<visual><binding template='ToastGeneric'>" + sAttrib + "<text>" + XmlSafeString(sMsg);
+                string sXml = "<visual><binding template='ToastGeneric'>" + sAttrib + 
+                "<text>" + XmlSafeString(sMsg);
+
                 if (!string.IsNullOrEmpty(sMsg1))
+                {
                     sXml = sXml + "</text><text>" + XmlSafeString(sMsg1);
+                }
                 sXml = sXml + "</text></binding></visual>";
-                var oXml = new Windows.Data.Xml.Dom.XmlDocument();
+
+                Windows.Data.Xml.Dom.XmlDocument oXml = new Windows.Data.Xml.Dom.XmlDocument();
+                
                 oXml.LoadXml("<toast>" + sHdr + sXml + "</toast>");
-                var oToast = new Windows.UI.Notifications.ToastNotification(oXml);
+
+                Windows.UI.Notifications.ToastNotification oToast = new Windows.UI.Notifications.ToastNotification(oXml);
+                
                 Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier().Show(oToast);
 
 #else
@@ -1270,7 +1320,7 @@ namespace p
 
 
         // -- Future ?? ----------------------------------------------------
-
+        // HttpPageAsync
         //public async static System.Threading.Tasks.Task<string> HttpPageAsync(string sUrl, string sErrMsg, string sData = "")
         //{
         //    try
@@ -1361,10 +1411,12 @@ namespace p
         //    }
 
         //    return "";
-        //}
+
+        //}//HttpPageAsync end
+        // -----------------------------------------------------------------
 
 
-        // 
+        // SetBadgeNo
         public static void SetBadgeNo(int iInt)
         {
             // https://docs.microsoft.com/en-us/windows/uwp/controls-and-patterns/tiles-and-notifications-badges
@@ -1606,7 +1658,7 @@ namespace p
         // -- CRASH ------------------------------------------------
         #region CrashMessage
 
-
+        // CrashMessageAdd
         public static void CrashMessageAdd(string sTxt, string exMsg, bool b)
         {
             string sAdd = DateTime.Now.ToString("HH:mm:ss") + " " + sTxt + "  " + exMsg + "  ";
@@ -1621,6 +1673,7 @@ namespace p
 
             if (GetSettingsBool("crashShowToast"))
             {
+                // make real toast =)
                 MakeToast(sAdd);
             }
 
@@ -1628,8 +1681,10 @@ namespace p
             #End If
             */
             SetSettingsString("appFailData", GetSettingsString("appFailData") + sAdd);
-        }
+        }//CrashMessageAdd end
 
+
+        // CrashMessageAdd
         public static void CrashMessageAdd(string sTxt)
         {
             string sAdd = DateTime.Now.ToString("HH:mm:ss") + " " + sTxt + "  ";
@@ -1645,6 +1700,7 @@ namespace p
 
             if (GetSettingsBool("crashShowToast"))
             {
+                // make real toast
                 MakeToast(sAdd);
             }
 
@@ -1653,9 +1709,11 @@ namespace p
             */
 
             SetSettingsString("appFailData", GetSettingsString("appFailData") + sAdd);
-        }
+
+        }//CrashMessageAdd end
 
 
+        // CrashMessageAdd
         public static void CrashMessageAdd(string sTxt, string exMsg)
         {
             string sAdd = DateTime.Now.ToString("HH:mm:ss") + " " + sTxt + "\n" + exMsg + "\n";
@@ -1664,13 +1722,17 @@ namespace p
             /* TODO ERROR: Skipped ElseDirectiveTrivia */
             if (GetSettingsBool("crashShowToast"))
             {
+                // make real toast
                 MakeToast(sAdd);
             }
             /* TODO ERROR: Skipped EndIfDirectiveTrivia */
 
             SetSettingsString("appFailData", GetSettingsString("appFailData") + sAdd);
-        }
 
+        }//CrashMessageAdd end
+
+
+        // CrashMessageAdd
         public static void CrashMessageAdd(string sTxt, Exception ex)
         {
             string sMsg = ex.Message;
@@ -1678,7 +1740,8 @@ namespace p
                 sMsg = sMsg + "\n" + ex.StackTrace;
 
             CrashMessageAdd(sTxt, sMsg);
-        }
+
+        }//CrashMessageAdd end
 
 
         public async static Task CrashMessageShow()
@@ -1693,22 +1756,29 @@ namespace p
         public static void CrashMessageExit(string sTxt, string exMsg)
         {
             CrashMessageAdd(sTxt, exMsg);
-#if NETFX_CORE || __ANDROID__
+
+#if !__ANDROID__//NETFX_CORE || __ANDROID__
+
+#if !__IOS__
             Windows.UI.Xaml.Application.Current.Exit();
             // Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
-#elif __IOS__
+
+#else // __IOS__
             System.Threading.Thread.CurrentThread.Abort();
 #endif
+
+#endif
+
         }
 
 
-        #endregion
+#endregion
         // --------------------------------------------------------------------------------
 
 
         // -- CLIPBOARD -------------------------------------------------------------------
 
-        #region ClipBoard
+#region ClipBoard
 
 
 
@@ -1743,7 +1813,7 @@ namespace p
 #endif
 
 
-        #endregion
+#endregion
 
         // -----------------------------------------------------------------
 
@@ -1751,9 +1821,9 @@ namespace p
 
         // -- Get/Set Settings ---------------------------------------------
 
-        #region Get/Set settings
+#region Get/Set settings
 
-        #region String
+#region String
 
 
         public static string GetSettingsString(TextBlock oTBox, string sName, string sDefault = "")
@@ -1826,10 +1896,10 @@ namespace p
             SetSettingsString(sName, sValue.Text, false);
         }
 
-        #endregion
+#endregion
 
 
-        #region Int
+#region Int
 
         //
         public static int GetSettingsInt(string sName, int iDefault = 0)
@@ -1874,11 +1944,11 @@ namespace p
         }
 
 
-        #endregion
+#endregion
 
 
 
-        #region Bool
+#region Bool
 
 
         //
@@ -1964,24 +2034,24 @@ namespace p
         }
 
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
 
 
         // -- Testy sieciowe ---------------------------------------------
 
-        #region testy sieciowe
+#region testy sieciowe
 
         // ...
 
-        #endregion
+#endregion
 
 
         // -- DialogBoxy ---------------------------------------------
 
-        #region DialogBoxy
+#region DialogBoxy
 
 
         public async static Task DialogBox(string sMsg)
@@ -2287,7 +2357,7 @@ namespace p
 
 
 
-        #endregion
+#endregion
 
 
     }//class k end

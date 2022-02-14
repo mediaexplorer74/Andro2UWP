@@ -57,7 +57,11 @@
             
             <!--<TextBox Header="How many last notification show" InputScope="Number" x:Uid="uiHowMany" win:Visibility="Collapsed" />-->
             <!-- my RnD -->
-            <TextBox x:Uid="uiHowMany" Text="123" Header="[temp] How many last notification show" InputScope="Number"/>
+            <TextBox Name="uiHowMany"  x:Uid="uiHowMany" Text="10" 
+                     Header="How many last notification show (not ready yet)" 
+                     InputScope="Number"
+                     not_win:Visibility="Collapsed"
+                     />
             
             <ToggleSwitch Header="Sort toast list" OnContent="Descending" OffContent="Ascending" Name="uiSortListMode" />
             
