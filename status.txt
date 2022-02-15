@@ -1,4 +1,3 @@
 v1.0.15-alpha
 
 Work in progress
-Attempt to do app's "makeup"
