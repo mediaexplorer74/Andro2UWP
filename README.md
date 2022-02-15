@@ -4,17 +4,17 @@
 
 My attempt to recover PKar70's Andro2UWP project, branch 10.2002.5
 
-Technical version (build) 1.0.14.0
+Technical version (build) 1.0.15.0
 
 Status: alpha (RnD)
 
 ## Progress 
 - Transferring/porting OneDriveDroid and OneDriveUWP to OneDrive UNO in progress
-- RU Localization added (and symply tested, not ready yet...)
-- Android Sync Engine recovered  (but it needs add. testing)
-- Mobile UWP version recovered a little (but many bugs still exist!)
-- Real toast notifications constructed only at/in draft... 
-- 2 great problems detected: timer damaged and real toasts' code is not connected to anything.. 
+- RU Localization realized (in common)
+- Android Sync Engine recovered  
+- Mobile UWP version recovered a little 
+- Real toast notifications constructed + test toast sending added :)
+- one great problem is still here: the system 15-min timer is so strange... IMHO, huge intervals are terrible thing :)
 
 
 ## Idea (Goal)
@@ -25,15 +25,15 @@ The beginning starts at this discussion: https://forum.xda-developers.com/t/new-
 ## Progress
 Phases of "building the solution": 
 
-[1] RnD +-
+[1] RnD +- [60%]
 
-[2] Design +-
+[2] Design +- [30%]
 
-[3] Tech. project +-
+[3] Tech. project +- [60%]
 
-[4] Dev >> [42%]
+[4] Dev >> [60%]
 
-[5] "Intro" -
+[5] "Intro" - [0%]
 
 
 ## Screenshots
@@ -56,7 +56,7 @@ sender names and notification filters, both created by you.
 
 ## Requirenments
 - Win SDK : 14xxx
-- Targets: ARM; x86; x64
+- Targets: ARM; x86
 
 ## My "Workbench" 
 

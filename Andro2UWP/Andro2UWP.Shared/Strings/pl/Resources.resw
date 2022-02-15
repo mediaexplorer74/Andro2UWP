@@ -273,4 +273,7 @@
   <data name="uiDeleteThisOlder.Text" xml:space="preserve">
     <value>Skasuj ten i starsze</value>
   </data>
+  <data name="msgSureDeleteToastList" xml:space="preserve">
+    <value>Na pewno usunąć toasty (from OneDrive app folder too)</value>
+  </data>
 </root>

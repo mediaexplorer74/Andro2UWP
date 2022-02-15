@@ -20,7 +20,7 @@
 
         <TextBlock FontSize="18" HorizontalAlignment="Center" Text="App log" />
         <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="uiLog" Margin="5" AcceptsReturn="True" IsReadOnly="true"/>    <!-- IsReadOnly="true" -->
-        <Button Grid.Row="2" HorizontalAlignment="Left" Margin="5" Click="uiReload_Click" x:Uid="uiReload" Content="Reload"/>
+        <Button Grid.Row="2" HorizontalAlignment="Left" Margin="5" Click="uiReloadLog_Click" x:Uid="uiReload" Content="Reload"/>
         <Button Grid.Row="2" HorizontalAlignment="Center" Margin="5" Click="uiOk_Click" x:Uid="uiOk" Content="Ok"/>
         <Button Grid.Row="2" HorizontalAlignment="Right" Margin="5" Click="uiClearLog_Click" x:Uid="uiClearLog" Content="Clear"/>
     </Grid>

@@ -1,4 +1,4 @@
-v1.0.14-alpha
+v1.0.15-alpha
 
 Work in progress
-Attempt to recover the passing process of toast files located at (on/in) OneDrive storage
+Attempt to do app's "makeup"

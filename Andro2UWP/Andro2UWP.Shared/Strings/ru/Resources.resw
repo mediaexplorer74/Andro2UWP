@@ -118,136 +118,139 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessibilityServiceDescription" xml:space="preserve">
-    <value>If you want me to send Notifications to OneDrive (to UWP companion app), I need access to Notifications :)</value>
+    <value>Если вы хотите отправлять уведомления на OneDrive (для приложения-компаньена), дайте права на просмотр активностей (Accessability)</value>
   </data>
   <data name="ApplicationName" xml:space="preserve">
     <value>Andro2UWP</value>
   </data>
   <data name="errNoNetwork" xml:space="preserve">
-    <value>impossible without network</value>
+    <value>невозможно без Интернета</value>
   </data>
   <data name="errOneDriveInit" xml:space="preserve">
-    <value>Error initializing OneDrive</value>
+    <value>Ошибка инициализации OneDrive</value>
   </data>
   <data name="msgAccessibilityFirst" xml:space="preserve">
-    <value>Grant Accessibility permission first</value>
+    <value>Сначала необходимо получить разрешение (Grant Accessibility)</value>
   </data>
   <data name="msgAdd" xml:space="preserve">
-    <value>Add</value>
+    <value>Добавить</value>
   </data>
   <data name="msgAddFilterTitle" xml:space="preserve">
-    <value>Add filter</value>
+    <value>Добавить фильтр</value>
   </data>
   <data name="msgCancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отменить</value>
   </data>
   <data name="msgComposingError" xml:space="preserve">
-    <value>ERROR while composing email - log would not be send (maybe it is too long)</value>
+    <value>ERROR при формировании email - log не может быть отправлен(возможно, он слишком большой)</value>
   </data>
   <data name="msgEnterDevName" xml:space="preserve">
-    <value>Enter device name:</value>
+    <value>Введите имя устройства:</value>
   </data>
   <data name="msgNoData" xml:space="preserve">
-    <value>Nothing to show</value>
+    <value>Нечего отобразить</value>
   </data>
   <data name="msgSendLogEmail" xml:space="preserve">
-    <value>Send log via email?</value>
+    <value>Отправить лог по email?</value>
   </data>
   <data name="msgSourceShould1" xml:space="preserve">
-    <value>Source</value>
+    <value>Источник</value>
   </data>
   <data name="msgSourceShould2" xml:space="preserve">
-    <value>should become:</value>
+    <value>должен быть:</value>
   </data>
   <data name="msgSureDeleteLog" xml:space="preserve">
-    <value>Sure to delete log?</value>
+    <value>Уверены, что хотите удалить логи?</value>
+  </data>
+  <data name="msgSureDeleteToastList" xml:space="preserve">
+    <value>Очистить список уведомлений, причем удалить эти уведомления из папки приложения Andro2UWP на OneDrive тоже</value>
   </data>
   <data name="msgSureRemoveOlder" xml:space="preserve">
-    <value>Sure to delete older than</value>
+    <value>Уверены, что хотите удалить более старые чем</value>
   </data>
   <data name="msgSureRemoveSender" xml:space="preserve">
-    <value>Sure to delete all from</value>
+    <value>Уверены, что хотите удалить все элементы от</value>
   </data>
   <data name="msgSureRemoveThisOlder" xml:space="preserve">
-    <value>Sure to delete this and all older?</value>
+    <value>Уверены, что хотите удалить все эти и все более старые?</value>
   </data>
   <data name="resDlgCancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="resDlgNo" xml:space="preserve">
-    <value>No</value>
+    <value>Нет</value>
   </data>
   <data name="resDlgSetName" xml:space="preserve">
     <value>Set</value>
   </data>
   <data name="resDlgYes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Да</value>
   </data>
   <data name="uiAccessibility.Content" xml:space="preserve">
     <value>Accessibility</value>
   </data>
   <data name="uiAutoRefresh.Label" xml:space="preserve">
-    <value>Auto refresh</value>
+    <value>Автообновление</value>
   </data>
   <data name="uiBattery.Content" xml:space="preserve">
-    <value>Battery</value>
+    <value>Батарея</value>
   </data>
   <data name="uiClearList.Label" xml:space="preserve">
-    <value>Reset cache list</value>
+    <value>Очистить список</value>
   </data>
   <data name="uiClearLog.Content" xml:space="preserve">
-    <value>Clear</value>
+    <value>Очистить</value>
   </data>
   <data name="uiCopy.Text" xml:space="preserve">
-    <value>Copy</value>
+    <value>Скопировать</value>
   </data>
   <data name="uiCounter.Header" xml:space="preserve">
-    <value>Current counter</value>
+    <value>Текущий счетчик</value>
   </data>
   <data name="uiCreateFilter.Text" xml:space="preserve">
     <value>Filter-out</value>
   </data>
   <data name="uiDebugLog.OffContent" xml:space="preserve">
-    <value>Shorter log</value>
+    <value>Логи в краткой форме</value>
   </data>
   <data name="uiDebugLog.OnContent" xml:space="preserve">
-    <value>Add debug info to log</value>
+    <value>Отладочная информация в логах</value>
   </data>
   <data name="uiDeleteOlder.Text" xml:space="preserve">
-    <value>Delete all older</value>
+    <value>Удалить все более старые</value>
   </data>
   <data name="uiDeleteSender.Text" xml:space="preserve">
-    <value>Delete from sender</value>
+    <value>Удалить от отправителя</value>
   </data>
   <data name="uiDeleteThis.Text" xml:space="preserve">
-    <value>Delete this</value>
+    <value>Удалить это</value>
   </data>
   <data name="uiDeleteThisOlder.Text" xml:space="preserve">
-    <value>Delete this and older</value>
+    <value>Удалить это и более старые</value>
   </data>
   <data name="uiDetails.Text" xml:space="preserve">
-    <value>Details</value>
+    <value>Детали</value>
   </data>
   <data name="uiDevName.Header" xml:space="preserve">
-    <value>Device name</value>
+    <value>Имя устройства</value>
   </data>
   <data name="uiOk.Content" xml:space="preserve">
     <value>Ok</value>
   </data>
   <data name="uiPermiss.Text" xml:space="preserve">
-    <value>Permissions</value>
+    <value>Права</value>
   </data>
   <data name="uiRefresh.Label" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Обновить</value>
   </data>
   <data name="uiRefreshList.Content" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Обновить</value>
   </data>
   <data name="uiReload.Content" xml:space="preserve">
-    <value>Reload</value>
+    <value>Перезагрузить</value>
   </data>
   <data name="uiRenameSource.Text" xml:space="preserve">
-    <value>Rename Source</value>
+    <value>Переименовать источник</value>
   </data>
   <data name="uiResetList.Content" xml:space="preserve">
     <value>Очистить кэш-список</value>

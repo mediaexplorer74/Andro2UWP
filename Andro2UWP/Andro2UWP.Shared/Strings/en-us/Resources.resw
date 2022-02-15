@@ -162,6 +162,9 @@
   <data name="msgSureDeleteLog" xml:space="preserve">
     <value>Sure to delete log?</value>
   </data>
+  <data name="msgSureDeleteToastList" xml:space="preserve">
+    <value>Are you sure to delete all toast files (from OneDrive app folder too)</value>
+  </data>
   <data name="msgSureRemoveOlder" xml:space="preserve">
     <value>Sure to delete older than</value>
   </data>

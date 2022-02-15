@@ -27,9 +27,9 @@ namespace Andro2UWP
             this.InitializeComponent();
         }
 
-        //private void ProgresywnyRing(bool sStart)
+        //private void ProgresywnyRing(bool sActive)
         //{
-        //    if (sStart)
+        //    if (sActive)
         //    {
         //        double dVal;
         //        dVal = Math.Min(uiGrid.ActualHeight, uiGrid.ActualWidth) / 2;
@@ -47,19 +47,24 @@ namespace Andro2UWP
         //}
 
 
-
+        // ReloadLogFile
         private async void ReloadLogFile()
         {
             //ProgresywnyRing(true);
 
             p.k.ProgRingShow(true);
-            
-            var plik = await App.GetLogFile();
 
-            if (plik != null)
+            Windows.Storage.StorageFile file = await App.GetLogFile();
+
+            if (file != null)
             {
 #if !__WASM__
-                string logText = "ReloadLogFile - TODO";//await plik.ReadAllTextAsync(); // Windows.Storage.FileIO.ReadTextAsync(plik);
+
+                // TEMP
+                string logText = "";
+                //logText = "ReloadLogFile - TODO";
+                //logText = await plik.OpenReadAsync();//.ReadAllTextAsync(); 
+                logText = await Windows.Storage.FileIO.ReadTextAsync(file);//Windows.Storage.FileIO.ReadTextAsync(plik);
 
 
                 uiLog.Text = logText;
@@ -70,48 +75,75 @@ namespace Andro2UWP
 
             // ProgresywnyRing(false);
             p.k.ProgRingShow(false);
-        }
+
+        }//ReloadLogFile end
 
 
+        // uiPage_Loaded
         private void uiPage_Loaded(object sender, RoutedEventArgs e)
         {
+            // ?
             p.k.ProgRingInit(true, false);
-            ReloadLogFile();
-        }
 
+            ReloadLogFile();
+        
+        }//uiPage_Loaded end
+
+
+        // uiOk_Click
         private void uiOk_Click(object sender, RoutedEventArgs e)
         {
             Frame.GoBack();
-        }
+        }//uiOk_Click end
 
-        private void uiReload_Click(object sender, RoutedEventArgs e)
+        // uiReloadLog_Click
+        private void uiReloadLog_Click(object sender, RoutedEventArgs e)
         {
             ReloadLogFile();
         }
+
+        // uiClearLog_Click
         private async void uiClearLog_Click(object sender, RoutedEventArgs e)
         {
-            if(await p.k.DialogBoxResYNAsync("msgSureDeleteLog"))
+            if (await p.k.DialogBoxResYNAsync("msgSureDeleteLog"))
             {
 
-                if(await p.k.DialogBoxResYNAsync("msgSendLogEmail"))
+                if (await p.k.DialogBoxResYNAsync("msgSendLogEmail"))
                 {
                     try
                     {
-                        Windows.ApplicationModel.Email.EmailMessage oMsg = new Windows.ApplicationModel.Email.EmailMessage();
+                        Windows.ApplicationModel.Email.EmailMessage oMsg 
+                            = new Windows.ApplicationModel.Email.EmailMessage();
+                        
                         oMsg.Subject = "Log Andro2UWP, " + DateTime.Now.ToString("yyyy.MM.dd HH:mm");
                         oMsg.Body = uiLog.Text;
+                        
                         await Windows.ApplicationModel.Email.EmailManager.ShowComposeNewEmailAsync(oMsg);
                     }
-                    catch
+                    catch (Exception ex) 
                     {
-                        p.k.DialogBoxRes("msgComposingError");
+                        //RnD: case 1
+                        await p.k.DialogBoxRes("msgComposingError: " + ex.Message);
+
+                        //RnD: case 2
+                        uiLog.Text = ex.Message;
+                        
+                        return;
                     }
                 }
 
-                var plik = await App.GetLogFile();
-                if (plik != null) await plik.DeleteAsync();
+                Windows.Storage.StorageFile file = await App.GetLogFile();
+
+                if (file != null)
+                { 
+                    await file.DeleteAsync(); 
+                }
+
                 uiLog.Text = "";
             }
-        }
-    }
-}
+
+        }//uiClearLog_Click end
+
+    }//AppLog class end
+
+} //Andro2UWP namespace end

@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Andro2UWP;
+using Windows.UI.Popups;
 
 
 // ! TODO-s: do Strings:
@@ -2040,9 +2041,9 @@ namespace p
 
 
 
-        // -- Testy sieciowe ---------------------------------------------
+        // -- Tests zone ---------------------------------------------
 
-#region testy sieciowe
+#region Tests zone
 
         // ...
 
@@ -2051,13 +2052,30 @@ namespace p
 
         // -- DialogBoxy ---------------------------------------------
 
-#region DialogBoxy
+#region DialogBoxes
 
 
         public async static Task DialogBox(string sMsg)
         {
-            var oMsg = new Windows.UI.Popups.MessageDialog(sMsg);
+            var oMsg = new Windows.UI.Popups.MessageDialog(sMsg);//, "[title]");
+
+            // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+            oMsg.Commands.Add(new UICommand(
+                "Ok",
+                new UICommandInvokedHandler(p.k.CommandInvokedHandler)));
+
+            // Set the command that will be invoked by default
+            oMsg.DefaultCommandIndex = 0;
+
             await oMsg.ShowAsync();
+        }
+
+        private static void CommandInvokedHandler(IUICommand command)
+        {
+            // Display message showing the label of the command that was invoked
+            //rootPage.NotifyUser("The '" + command.Label + "' command has been selected.",
+            //    NotifyType.StatusMessage);
+            // don't do anything =)
         }
 
         public static string GetLangString(string sMsg)
@@ -2107,7 +2125,7 @@ namespace p
             await DialogBox(sMsg);
         }
 
-        public async static Task<bool> DialogBoxYN(string sMsg, string sYes = "Tak", string sNo = "Nie")
+        public async static Task<bool> DialogBoxYN(string sMsg, string sYes = "Yes", string sNo = "No")
         {
             var oMsg = new Windows.UI.Popups.MessageDialog(sMsg);
             var oYes = new Windows.UI.Popups.UICommand(sYes);
@@ -2127,7 +2145,7 @@ namespace p
         }
 
 
-        public async static Task<bool> DialogBoxYNAsync(string sMsg, string sYes = "Tak", string sNo = "Nie")
+        public async static Task<bool> DialogBoxYNAsync(string sMsg, string sYes = "Yes", string sNo = "No")
         {
             var oMsg = new Windows.UI.Popups.MessageDialog(sMsg);
             var oYes = new Windows.UI.Popups.UICommand(sYes);

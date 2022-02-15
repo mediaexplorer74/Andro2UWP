@@ -40,14 +40,29 @@ namespace Andro2UWP
         // uiPage_Loaded
         private async void uiPage_Loaded(object sender, RoutedEventArgs e)
         {
+
+#if !__ANDROID__
+            uiAutoRefresh.IsChecked = p.k.IsTriggersRegistered("Andro2UWP_Timer");
+            //uiAutoRefresh.IsEnabled = false;
+
+#endif
+            uiRefresh.IsEnabled = false;
+            //uiSettings.IsEnabled = false;
+            //uiShowLog.IsEnabled = false;
+
 #if DEBUG 
             p.k.SetSettingsInt("debugLogLevel", 5); // TODO: for now, yes, then you need to cut
 #endif 
             p.k.SetSettingsString("appFailData", "");   // no leftovers from the previous run
+
+            // init prog ring...
             p.k.ProgRingInit(true, true);
+            
+            // we start to write...
+            p.k.ProgRingShow(true);
 
             //p.k.GetAppVers("uiVersion");
-            
+
             App.gsDeviceName = p.k.GetSettingsString("deviceName");
             App.giCurrentNumber = p.k.GetSettingsInt("currentFileNum") + 1;
             
@@ -66,64 +81,93 @@ namespace Andro2UWP
             }
             catch (Exception ex)
             {
-                //Debug.WriteLine(" uiPage_Loaded - initODandDict - exception: " + ex.Message);
+                Console.WriteLine("[w] uiPage_Loaded - initODandDict problem: " + ex.Message);
+                await App.AddLogEntry("[w] uiPage_Loaded - initODandDict problem: " + ex.Message, true);
+
+                //ignore this deal... still continue :)
             }
 
-           
-            // we write...
-            p.k.ProgRingShow(true);
+            
+             //bool Rslt_flag = true;
 
 
-#if !__ANDROID__
-            uiAutoRefresh.IsEnabled = false;
-#endif
-            //Disable autorefresh
-            uiRefresh.IsEnabled = false;
-            uiSettings.IsEnabled = false;
-            uiShowLog.IsEnabled = false;
+             //if (!await App.LoadNews(true))
+             try
+             {
+                 //Rslt_flag = 
+                 await App.LoadNews(true); // await 
+             }
+             catch (Exception ex)
+             {
+                Console.WriteLine("[ex] uiPage_Loaded - LoadNews exception: " + ex.Message);
+                await App.AddLogEntry("[ex] uiPage_Loaded - LoadNews exception: " + ex.Message, true);
+                //Rslt_flag = false;
 
-            bool Rslt_flag = true;
-
-            //if (!await App.LoadNews(true))
-            try
-            {
-                Rslt_flag = await App.LoadNews(true);
-            }
-            catch (Exception ex)
-            {
-
-                Rslt_flag = false;
-            }
-
-
-            // Plan B
-            if (Rslt_flag == false)
-            {
                 // don't write...
                 p.k.ProgRingShow(false);
 
                 uiRefresh.IsEnabled = true;
-                uiSettings.IsEnabled = true;
-                uiShowLog.IsEnabled = true;
-#if !__ANDROID__                    
+                //uiSettings.IsEnabled = true;
+                //uiShowLog.IsEnabled = true;
+#if !__ANDROID__
+                //uiAutoRefresh.IsEnabled = true;
                 uiAutoRefresh.IsChecked = p.k.IsTriggersRegistered("Andro2UWP_Timer");
+
+                // Real tosts / Timer deals
+                ControlBackgroundTask();
 #endif
 
                 return;
             }
 
-            RefreshListView(false);
+
+             /*if (Rslt_flag == false)
+             {
+                 // don't write...
+                 p.k.ProgRingShow(false);
+
+                 uiRefresh.IsEnabled = true;
+                 uiSettings.IsEnabled = true;
+                 uiShowLog.IsEnabled = true;
+ #if !__ANDROID__ 
+                 uiAutoRefresh.IsEnabled = true;
+                 uiAutoRefresh.IsChecked = p.k.IsTriggersRegistered("Andro2UWP_Timer");
+
+                 // Real tosts / Timer deals
+                 ControlBackgroundTask();
+ #endif
+
+                 return;
+             }
+             */
+            
+
+            try
+            {
+                RefreshListView(false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[w] uiPage_Loaded - RefreshListView problem: " + ex.Message);
+                await App.AddLogEntry("[w] uiPage_Loaded - RefreshListView problem: " + ex.Message, true);
+
+                // Ignore it... Still continue :)
+            }
 
             // don't write...
             p.k.ProgRingShow(false);
 
             uiRefresh.IsEnabled = true;
                 
-            uiSettings.IsEnabled = true;
-            uiShowLog.IsEnabled = true;
+            //uiSettings.IsEnabled = true;
+            //uiShowLog.IsEnabled = true;
 
-#if !__ANDROID__            
-            uiAutoRefresh.IsChecked = p.k.IsTriggersRegistered("Andro2UWP_Timer");            
+#if !__ANDROID__  
+            //uiAutoRefresh.IsEnabled = true;
+            uiAutoRefresh.IsChecked = p.k.IsTriggersRegistered("Andro2UWP_Timer");
+            
+            // Real tosts / Timer deals
+            ControlBackgroundTask();
 #endif
 
         }//uiPage_Loaded end
@@ -195,6 +239,8 @@ namespace Andro2UWP
 
                 return;
             }
+
+            ListRefresh();
 #endif
         }//uiTestToast_Click end
 
@@ -219,20 +265,39 @@ namespace Andro2UWP
 
         }//uiShowLog_Click end
 
+        // uiShowLog_Click
+        private async void uiAbout_Click(object sender, RoutedEventArgs e)
+        {
+            await p.k.DialogBox(
+             "** About **"
+             + "\n" +
+             "Andro2UWP 1 (https://github.com/mediaexplorer74/Andro2UWP) is RnD project. AS-IS. " +
+             "Distributed under the MIT License." + 
+             "\n" 
+             + "\n" +
+             "* Thanks! *" 
+             + "\n" +
+            "I wanted to put down some thank you's here for folks/projects/websites " +
+            "that were invaluable for helping me get this project into a functional state:" + "\n" +
+            "* Piotr Karocki (https://github.com/pkar70/) - Great C#/Xamarin/UNO Platform developer" +"\n" +
+            "* Andro2UWP (https://github.com/pkar70/Andro2UWP) - Original Andro2UWP" +"\n");
+
+        }//uiAbout_Click end
+
 
         // uiStartStop_Toggled
         private async void uiStartStop_Toggled(object sender, RoutedEventArgs e)
         {
             // this button is Android only
 #if __ANDROID__
-            uiStartStop.IsEnabled = false;
+            //uiStartStop.IsEnabled = false;
 #endif
 
             if (p.k.GetPlatform("uwp"))
             {
                 p.k.DialogBox("How did you press this not to be on Android? ;)");
                 
-                uiStartStop.IsEnabled = true;
+                //uiStartStop.IsEnabled = true;
                 
                 return;
             }
@@ -247,7 +312,7 @@ namespace Andro2UWP
                 //App.gOnedrive?.Dispose();
                 //App.gOnedrive = null;
 
-                uiStartStop.IsEnabled = true;
+                //uiStartStop.IsEnabled = true;
                 
                 return;
             }
@@ -283,7 +348,7 @@ namespace Andro2UWP
                     Uno.UI.BaseActivity.Current.StartActivity(intent);
 
                     uiStartStop.IsOn = false;
-                    uiStartStop.IsEnabled = true;
+                    //uiStartStop.IsEnabled = true;
                     
                     return;
                 }
@@ -320,28 +385,31 @@ namespace Andro2UWP
 
             if (!await App.EnsureOneDriveOpen(true))
             {
-                await App.AddLogEntry("FAIL cannot open OneDrive", false);
+                await App.AddLogEntry("[e] FAIL cannot open OneDrive", false);
                 
                 //TODO
                 //App.gOnedrive?.Dispose();
                 //App.gOnedrive = null;
 
-                uiStartStop.IsOn = false;
-                
+                // RnD
+                //uiStartStop.IsOn = false; // ?
+
+                //uiStartStop.IsEnabled = true;
+
                 p.k.ProgRingShow(false);
                 
-                uiStartStop.IsEnabled = true;
+               
                 
                 return;
             }
 
-            await App.AddLogEntry("startujemy!", false);
+            await App.AddLogEntry("[i] OneDrive handling engine started!", false);
 
             // wszystko gotowe, mozesz wyłapywać
 
             App.gbCatch = true;
             
-            uiStartStop.IsEnabled = true;
+            //uiStartStop.IsEnabled = true;
 
             p.k.ProgRingShow(false);
 
@@ -349,28 +417,60 @@ namespace Andro2UWP
         }//uiStartStop_Toggled end 
 
 
-        // RnD
+        
         // uiClearList_Click
-        /*
+        
         private async void uiClearList_Click(object sender, RoutedEventArgs e)
         {
-            // to be: resetlisty (to get rid of older ones)
+            // old scheme 
+            // TODO: reset all OneDrive toast list (to get rid of older ones)
             //if (p.k.GetPlatform("uwp"))
             //{
             //    // visibility's off, because how? tozsame with delete everything?
             //    await p.k.DialogBoxAsync("I can't do it yet.");
             //}
             //else
-            //{// on Android: we do not clean OneDrive, only what is on the screen
-            
-            App.sToasts.Clear();
-            
-            uiList.ItemsSource = App.sToasts.ToList();
+            //{
+            // on Android: we do not clean OneDrive, only what is on the screen
+            //            
+            //App.sToasts.Clear();
+            //uiList.ItemsSource = App.sToasts.ToList();
 
-            //}
+            // RnD
+#if __ANDROID__
+            
+            // Show worning dialog box
+            if
+            (
+                // Plan A: mono-language (EN) case
+                //!await p.k.DialogBoxYNAsync("Are you sure to delete all toast files (from OneDrive app folder too)?")
+                // Plan B: multi-language case
+                !await p.k.DialogBoxYNAsync(p.k.GetLangString("msgSureDeleteToastList") + "?")                
+            )
+            {
+                return;
+            }
+
+            // from list, oraz from OneDrive
+            List<string> filelist = new List<string>();
+
+            foreach (var item in App.sToasts)
+            {
+                // add toast item to filelist 
+                filelist.Add(item.sFileName);                
+            }
+
+            // delete files
+            await DeleteFiles(filelist, false);
+
+            ListRefresh();
+            
+#else
+            p.k.DialogBox("how come you pressed this button (not from Android)? ;)");
+#endif
 
         }//uiClearList_Click end 
-        */
+
 
 
         // uiItem_DoubleTapped
@@ -418,7 +518,7 @@ namespace Andro2UWP
             {
                 p.k.DialogBox("how come you pressed it to be on Android? ;)");
 
-                uiStartStop.IsEnabled = true;
+                //uiStartStop.IsEnabled = true;
                 
                 return;
             }
@@ -462,7 +562,7 @@ namespace Andro2UWP
         {
             p.k.ProgRingShow(true, false, 0, filelist.Count);
 
-#if !__ANDROID__
+//#if !__ANDROID__
             await p.od.DeleteFilesFromOneDrive("Apps/Andro2UWP", filelist);
 
             for(int iLp = App.sToasts.Count-1; iLp>=0; iLp--)
@@ -477,7 +577,7 @@ namespace Andro2UWP
 
             // show new ("refreshed") version of filelist
             RefreshListView(false);//(bMsg);
-#endif
+//#endif
             p.k.ProgRingShow(false);
 
         }//DeleteFiles
@@ -486,6 +586,7 @@ namespace Andro2UWP
         private void uiDeleteThis_Click(object sender, RoutedEventArgs e)
         {
             App.JedenToast toast = MFIdataContext(sender);
+
             if (toast is null) return;
 
             // from list, oraz from OneDrive
@@ -662,9 +763,8 @@ namespace Andro2UWP
             }
 
             App.glFilters.Add(new App.JedenFiltr(oPackage.Text, oTitle.Text, oText.Text));
-            // save filtry
+            // (...need to save filter)
 
-            //ProgresywnyRing(true);
             p.k.ProgRingShow(true);
 
 
@@ -691,65 +791,6 @@ namespace Andro2UWP
         // uiRefreshList_Click
         private async void uiRefreshList_Click(object sender, RoutedEventArgs e)
         {
-            //RnD
-            //if (sender != null)   // there is no call other than from event button, so always sender < > null?
-            //{
-            //}
-
-            // we write...
-            p.k.ProgRingShow(true);
-
-            // Refresh button - off
-
-            uiRefresh.IsEnabled = false;
-
-            //if (p.k.GetPlatform("uwp"))
-            //{
-
-            try
-            {                
-
-                if (!await App.LoadNews(true))
-                {
-                    // don't write...
-                    p.k.ProgRingShow(false);
-
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("[ex] Exception: " + ex.Message);
-                //p.k.DialogBoxRes("[ex] RefreshList.Click Exception: " + ex.Message);
-
-                // don't write...
-                p.k.ProgRingShow(false);
-
-                // enable refresh button
-                uiRefresh.IsEnabled = false;
-
-                return;
-            }
-
-            //if (!await App.initODandDict())
-            //    return;     // first of all-reading the dictionaries anew (so as not to reset the dictionary!)
-
-            //await App.LoadNew();                
-
-            //}          
-
-            
-
-            // Refresh "toasts" list
-            RefreshListView(false);//(true);
-
-            // don't write...
-            p.k.ProgRingShow(false);
-
-            // Refresh button - on
-            uiRefresh.IsEnabled = true;
-
-
 
             // --------------TEMP (for Testing ONLY)---------------
             // --- RnD zone - start -------------------------------
@@ -765,15 +806,70 @@ namespace Andro2UWP
             */
             // --- RnD zone - stop --------------------------------
 
+            ListRefresh();
+
         }//uiRefreshList_Click end
 
 
-        // RefreshListView
-        //public void HitRefresh()
-        //{
-        //    //ListView uiList = new ListView();
-        //    RefreshListView(false);
-        //}//RefreshListView end
+        // ListRefresh
+        public async void ListRefresh()
+        {
+            ProgresywnyRingV2(true);
+
+            // we write...
+            //p.k.ProgRingShow(true);
+            ProgresywnyRingV2(true);
+
+            // Refresh button - off
+
+            uiRefresh.IsEnabled = false;
+
+            try
+            {
+
+                if (!await App.LoadNews(true))
+                {
+                    // don't write...
+                    //p.k.ProgRingShow(false);
+                    ProgresywnyRingV2(false);
+
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("[ex] Exception: " + ex.Message);
+                await p.k.DialogBoxResAsync("Refresh List exception: " + ex.Message);
+
+                // don't write...
+                //p.k.ProgRingShow(false);
+                ProgresywnyRingV2(false);
+
+                // enable refresh button
+                uiRefresh.IsEnabled = false;
+
+                return;
+            }
+
+            //RnD
+            //first of all-reading the dictionaries anew (so as not to reset the dictionary!)
+            //if (!await App.initODandDict()) return;     
+            //await App.LoadNew();             
+
+
+            // Refresh "toasts" list
+            RefreshListView(false);//(true);
+
+
+            // don't write...
+            //p.k.ProgRingShow(false);
+            ProgresywnyRingV2(false);
+
+            // Refresh button - on
+            uiRefresh.IsEnabled = true;
+
+
+        }//ListRefresh end
 
 
         // RefreshListView
@@ -785,6 +881,8 @@ namespace Andro2UWP
             for (int iLoop = 0; iLoop < App.sToasts.Count; iLoop++)
             {
                 var oItem = App.sToasts.ElementAt(iLoop);
+                
+                //RnD
                 // comment-out, because not used, a waste of time (especially Android)
                 //if (string.IsNullOrEmpty(oItem.displayDevice))
                 //{
@@ -816,9 +914,11 @@ namespace Andro2UWP
             }
             else
             {
-                uiList.ItemsSource = App.sToasts.ToList();
+                uiList.ItemsSource = //App.sToasts.ToList();
+                    (from item in App.sToasts orderby item.sFileName ascending select item).ToList();
             }
 
+ /*
             // and possibly delete the Delete List button
             if (App.sToasts.Count > 0)
             {
@@ -834,7 +934,10 @@ namespace Andro2UWP
             }
             else
             {
-                if (bMsg) p.k.DialogBoxRes("msgNoData");
+                if (bMsg)
+                {
+                    await p.k.DialogBoxResAsync("msgNoData");
+                }
 
                 if (p.k.GetPlatform("uwp"))
                 {
@@ -842,7 +945,9 @@ namespace Andro2UWP
                     //uiClearList.Visibility = Visibility.Collapsed;
 #endif
                 }
+ 
             }
+ */
 
         }//RefreshListView end
 
@@ -853,8 +958,19 @@ namespace Andro2UWP
         // uiAutoRefresh_Click
         private async void uiAutoRefresh_Click(object sender, RoutedEventArgs e)
         {
-            if(!uiAutoRefresh.IsChecked.HasValue) return;
-            if(uiAutoRefresh.IsChecked.Value)
+            ControlBackgroundTask();
+        }//uiAutoRefresh_Click end
+
+
+        // ControlBackgroundTask
+        private void ControlBackgroundTask()
+        {
+            if (!uiAutoRefresh.IsChecked.HasValue)
+            {
+                return;
+            }
+
+            if (uiAutoRefresh.IsChecked.Value)
             {
                 // RnD
                 //if(!p.k.IsFamilyDesktop())
@@ -874,28 +990,29 @@ namespace Andro2UWP
             {
                 p.k.UnregisterTriggers("Andro2UWP_Timer");
             }
-        }//uiAutoRefresh_Click end
+
+        }//ControlBackgroundTask end
 #endif
 
-        // ProgresywnyRing
-        //private void ProgresywnyRing(bool sStart)
-        //{
-        //    if (sStart)
-        //    {
-        //        double dVal;
-        //        dVal = Math.Min(uiGrid.ActualHeight, uiGrid.ActualWidth) / 2;
-        //        uiProcesuje.Width = dVal;
-        //        uiProcesuje.Height = dVal;
-        //
-        //        uiProcesuje.Visibility = Visibility.Visible;
-        //        uiProcesuje.IsActive = true;
-        //    }
-        //    else
-        //    {
-        //        uiProcesuje.IsActive = false;
-        //        uiProcesuje.Visibility = Visibility.Collapsed;
-        //    }
-        //}//ProgresywnyRing end
+        // ProgresywnyRing v2
+        private void ProgresywnyRingV2(bool sActive)
+        {
+            if (sActive)
+            {
+                double dVal;
+                dVal = Math.Min(uiGrid.ActualHeight, uiGrid.ActualWidth) / 2;
+                uiProcesuje.Width = dVal;
+                uiProcesuje.Height = dVal;
+        
+                uiProcesuje.Visibility = Visibility.Visible;
+                uiProcesuje.IsActive = true;
+            }
+            else
+            {
+                uiProcesuje.IsActive = false;
+                uiProcesuje.Visibility = Visibility.Collapsed;
+            }
+        }//ProgresywnyRingV2 end
 
     }//MainPage class end
 

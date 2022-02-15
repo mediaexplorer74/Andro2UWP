@@ -670,10 +670,15 @@ namespace Andro2UWP
         {
             p.k.DebugOut("initODandDict(" + bMsg.ToString());
 
-            /*
+            
             //ProgresywnyRing(true);
-            if (bMsg) p.k.ProgRingShow(true);
 
+            //if (bMsg) 
+            //{
+            //    p.k.ProgRingShow(true);
+            //}
+
+            /*
             // Ensure thet OneDrive is open ...
             if (!await EnsureOneDriveOpen(bMsg))
             {
@@ -698,8 +703,12 @@ namespace Andro2UWP
 
             p.k.SetSettingsBool("pkarMode", await CheckPkarFile());
 
-            //ProgresywnyRing(false);
-            if (bMsg) p.k.ProgRingShow(false);
+            // ProgresywnyRing(false);
+
+            //if (bMsg)
+            //{
+            //    p.k.ProgRingShow(false);
+            //}
 
             p.k.SetSettingsBool("wasInit", true);
 
@@ -726,7 +735,10 @@ namespace Andro2UWP
                 return;
             }
 
-            if (bMsg) p.k.ProgRingShow(true);
+            if (bMsg)
+            {
+                p.k.ProgRingShow(true);
+            }
 
             // RnD: call on Android or.. not? 
             // load the list from OneDrive - for now on a button,
@@ -738,7 +750,10 @@ namespace Andro2UWP
             // and their contents - from progressbar
             await ReadContents(bMsg);
 
-            if (bMsg) p.k.ProgRingShow(false);
+            if (bMsg) 
+            { 
+                p.k.ProgRingShow(false); 
+            }
 
         }//LoadNew end
 
@@ -760,6 +775,7 @@ namespace Andro2UWP
                 return;
             }
 
+ // NOTE: for ANDROID - don't show the whole list of notifications (skip already sended toasts)
 #if !__ANDROID__
             if (!p.od.IsOneDriveOpened())
                 await p.od.OpenOneDrive(true, bMsg);
@@ -848,8 +864,17 @@ namespace Andro2UWP
                 }
             }
 
-            if (bMsg) p.k.ProgRingShow(true, false, 0, iToBeRead);
-            if (bMsg) p.k.ProgRingVal(0);
+            if (bMsg)
+            { 
+                p.k.ProgRingShow(true, false, 0, iToBeRead); 
+            }
+
+            if (bMsg)
+            { 
+                p.k.ProgRingVal(0); 
+            }
+            
+            // RnD
             //uiProgBar.Maximum = iToBeRead;
             //uiProgBar.Value = 0;
             //uiProgBar.Visibility = Visibility.Visible;
@@ -891,11 +916,19 @@ namespace Andro2UWP
                     }
 
                     // uiProgBar.Value = ++iToBeRead;
-                    if (bMsg) p.k.ProgRingInc();
+                    if (bMsg) 
+                    { 
+                        p.k.ProgRingInc(); 
+                    }
                 }
             }
 #endif
-            if (bMsg) p.k.ProgRingShow(false);
+            if (bMsg)
+            { 
+                p.k.ProgRingShow(false); 
+            }
+
+            // RnD
             //uiProgBar.Visibility = Visibility.Collapsed;
 
         }//ReadContents end
@@ -1087,11 +1120,21 @@ namespace Andro2UWP
                 
                 await AddLogEntry("Try to start renovating OneDrive toastfile...", false);
 
-                bool oResult = await p.od.ReplaceOneDriveFileContent
-                (
-                    "Apps/Andro2UWP/" + oItem.sFileName, 
-                     oItem.sMessage //  "\n1\n2\n3"
-                );
+                bool oResult = false;
+
+                try
+                {
+                    oResult = await p.od.ReplaceOneDriveFileContent
+                    (
+                        "Apps/Andro2UWP/" + oItem.sFileName,
+                         oItem.sMessage //  "\n1\n2\n3"
+                    );
+                }
+                catch (Exception ex)
+                {
+                    await AddLogEntry("[ex] ReplaceOneDriveFileContent exception: "+ ex.Message, false);
+                    oResult = false;
+                }
 
                 if (oResult == false)
                 {
@@ -1409,6 +1452,19 @@ namespace Andro2UWP
                 //}
 
                 ((App)App.Current).WriteToast(toastek);
+
+                //bad case
+                //MainPage.ListRefresh();
+                // RnD: Redirect to MainPage from here...
+                //Frame 
+                Frame rootFrame = Window.Current.Content as Frame;
+
+                // 
+                // just ensure that the window is active
+                if (rootFrame != null)
+                {
+                    rootFrame.Navigate(typeof(MainPage));//, e.Arguments);
+                }
 
             }//OnAccessibilityEvent end
 
