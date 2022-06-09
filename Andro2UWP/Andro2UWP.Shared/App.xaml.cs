@@ -775,64 +775,69 @@ namespace Andro2UWP
                 return;
             }
 
- // NOTE: for ANDROID - don't show the whole list of notifications (skip already sended toasts)
+            // NOTE: for ANDROID - don't show the whole list of notifications (skip already sended toasts)
 #if !__ANDROID__
             if (!p.od.IsOneDriveOpened())
+            {
                 await p.od.OpenOneDrive(true, bMsg);
+            }
 
-            System.Collections.ObjectModel.Collection<Microsoft.OneDrive.Sdk.Item> filesy =
+            System.Collections.ObjectModel.Collection<Microsoft.OneDrive.Sdk.Item> od_files =
                     await p.od.OneDriveGetAllChildsSDK("Apps/Andro2UWP/", false, true);
 
             // App.sToasts.Clear();
 
-            foreach (var filek in filesy)
-            {
-                string fileNameData = filek.Name;
-                string sTmp = "";
-
-                if (!fileNameData.EndsWith(".toast.txt"))
+            if (od_files != null)
+            { 
+                foreach (var od_file in od_files)
                 {
-                    continue;   // this is not a toast file
-                }
+                    string fileNameData = od_file.Name;
+                    string sTmp = "";
 
-
-                // check if we have one already by accident - if so, we don't load it
-                bool bAlready = false;
-                foreach (var oldToast in App.sToasts)
-                {
-                    if (oldToast.sFileName == fileNameData)
+                    if (!fileNameData.EndsWith(".toast.txt"))
                     {
-                        bAlready = true;
-                        break;
+                        continue;   // this is not a toast file
                     }
+
+
+                    // check if we have one already by accident - if so, we don't load it
+                    bool bAlready = false;
+                    foreach (var oldToast in App.sToasts)
+                    {
+                        if (oldToast.sFileName == fileNameData)
+                        {
+                            bAlready = true;
+                            break;
+                        }
+                    }
+                    if (bAlready)
+                        continue;
+
+                    var toast = new App.JedenToast();
+                    toast.sFileName = fileNameData;
+
+                    fileNameData = fileNameData.Replace(".toast.txt", "");
+
+                    int iInd = fileNameData.LastIndexOf("-");
+                    sTmp = fileNameData.Substring(iInd + 1); // sTmp == oItem.dDate.ToString("yyyy.MM.dd_HH.mm")
+                    fileNameData = fileNameData.Substring(0, iInd);
+                    toast.displayDate = sTmp.Replace("_", " "); // the file has an underline as a date and time separator
+                    //public DateTimeOffset dDate; - not used for ListItems
+
+                    iInd = fileNameData.LastIndexOf(".");
+                    sTmp = fileNameData.Substring(iInd + 1); // sTmp == oItem.iNumber.ToString("00000")
+                    int iNumber;
+                    int.TryParse(sTmp, out iNumber);
+                    toast.iNumber = iNumber;
+
+                    toast.sDevice = fileNameData.Substring(0, iInd);
+                    toast.displayDevice = "";   // for now, because only one; then you can add device ... in settings?
+
+                    toast.sOneDriveFileId = od_file.Id;
+                    toast.sSource = "TOBEREAD";
+
+                    App.sToasts.Add(toast);
                 }
-                if (bAlready)
-                    continue;
-
-                var toast = new App.JedenToast();
-                toast.sFileName = fileNameData;
-
-                fileNameData = fileNameData.Replace(".toast.txt", "");
-
-                int iInd = fileNameData.LastIndexOf("-");
-                sTmp = fileNameData.Substring(iInd + 1); // sTmp == oItem.dDate.ToString("yyyy.MM.dd_HH.mm")
-                fileNameData = fileNameData.Substring(0, iInd);
-                toast.displayDate = sTmp.Replace("_", " "); // the file has an underline as a date and time separator
-                //public DateTimeOffset dDate; - not used for ListItems
-
-                iInd = fileNameData.LastIndexOf(".");
-                sTmp = fileNameData.Substring(iInd + 1); // sTmp == oItem.iNumber.ToString("00000")
-                int iNumber;
-                int.TryParse(sTmp, out iNumber);
-                toast.iNumber = iNumber;
-
-                toast.sDevice = fileNameData.Substring(0, iInd);
-                toast.displayDevice = "";   // for now, because only one; then you can add device ... in settings?
-
-                toast.sOneDriveFileId = filek.Id;
-                toast.sSource = "TOBEREAD";
-
-                App.sToasts.Add(toast);
             }
 #endif
         }//
